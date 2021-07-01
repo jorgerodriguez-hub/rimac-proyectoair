@@ -1,0 +1,84 @@
+@import '../../../scss/index.scss';
+
+h1, label {
+    font-family: $lato;
+    font-weight: bold;
+    color: $color-text !important;
+}
+
+.menu-web-list {
+    &__items {
+        background-color: $blank;
+        padding: 10px 20px;
+        margin-bottom: 20px;
+    }
+}
+
+input.ant-input {
+    border-radius: 4px;
+    color: $gray3;
+    border-color: $gray4;
+
+    &:hover {
+        border-radius: 4px;
+        color: $gray2;
+        border-color: $gray1;
+    }
+
+    &:focus {
+        border-radius: 4px;
+        color: $gray1;
+        border-color: $gray1;
+        box-shadow: none;
+    }
+
+    &-focused {
+        border-radius: 4px;
+        color: $gray1;
+        border-color: $gray1;
+    }
+}
+
+.ant-select:not(.ant-select-customize-input) .ant-select-selector {
+    border-radius: 4px;
+    color: $gray3;
+    border-color: $gray4;
+}
+
+.ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector {
+    border-radius: 4px;
+    color: $gray1;
+    border-color: $gray1;
+    box-shadow: none;
+}
+
+.ant-select:not(.ant-select-disabled):hover .ant-select-selector {
+    border-radius: 4px;
+    color: $gray2;
+    border-color: $gray1;
+}
+
+.ant-picker {
+    border-radius: 4px;
+    color: $gray3;
+    border-color: $gray4;
+    width: 100%;
+
+    &:hover {
+        border-radius: 4px;
+        color: $gray2;
+        border-color: $gray1;
+    }
+
+    &-focused {
+        border-radius: 4px;
+        color: $gray1;
+        border-color: $gray1;
+        box-shadow: none;
+    }
+}
+
+.ant-row.ant-form-item {
+    margin-bottom: 5px;
+    padding: 10px 15px 10px 15px;
+}

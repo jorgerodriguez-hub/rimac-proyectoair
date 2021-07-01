@@ -1,0 +1,21 @@
+span.ant-badge-status-dot {
+    padding: 10px;
+    border-radius: 0px;
+}
+
+span.ant-badge-status-dot.ant-badge-status-default {
+    background-color: yellow;
+}
+
+button.ant-btn.ant-btn-primary.ant-btn-dangerous {
+    font-size: 12px;
+    float: right;
+}
+
+.ant-badge-status-text {
+    font-size: 12px;
+}
+
+span.ant-badge.ant-badge-status.ant-badge-not-a-wrapper {
+    float: right;
+}

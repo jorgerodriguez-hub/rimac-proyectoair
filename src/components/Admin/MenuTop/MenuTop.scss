@@ -1,0 +1,34 @@
+@import '../../../scss/index.scss';
+
+.menu-top {
+    display: flex;
+    background-color: $color-rimac;
+
+    button {
+        color: $blank;
+
+        &:hover {
+            color: $blank;
+        }
+        &:focus,
+        &:active {
+            color: $blank;
+        }
+    }
+
+    &__left {
+        &-logo {
+            width: 200px;
+            padding: 0 10px;        
+        }
+    }
+
+    &__right {
+        position: absolute;
+        right: 0;
+    }
+
+    .ant-btn {
+        font-size: 20px;
+    }
+}

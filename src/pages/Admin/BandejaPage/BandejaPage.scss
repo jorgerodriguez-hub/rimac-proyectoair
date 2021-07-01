@@ -1,0 +1,11 @@
+@import '../../../scss/index.scss';
+
+table {
+    font-size: 12px;
+}
+
+th.ant-table-cell {
+    color: black!important;
+    font-weight: bold!important;
+    background-color: #b1b1b1!important;
+}

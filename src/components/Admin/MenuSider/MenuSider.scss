@@ -1,0 +1,59 @@
+@import '../../../scss/index.scss';
+
+.admin-sider {
+    position: fixed;
+    left: 0;
+    top: 65px;
+    height: 100vh;
+    overflow: auto;
+}
+
+.ant-menu-item-selected a, .ant-menu-item-selected a:hover {
+    color: $color-rimac;
+}
+
+.ant-menu-inline .ant-menu-item::after {
+    border-right: 3px solid $color-rimac;
+}
+
+.ant-menu {
+    font-size: 13px;
+
+    &-item a:hover {
+        color: $gray2;
+    }
+
+    &-item-selected a:hover {
+        color: $color-rimac;
+    }
+}
+
+.upload-avatar {
+    display: table;
+    margin: 0 auto;
+    border: 2px solid #9a9a9a;
+    border-style: dashed;
+    border-radius: 100px;
+    padding: 10px;
+    margin-bottom: 10px;
+    margin-top: 20px;
+}
+
+aside.ant-layout-sider.ant-layout-sider-dark.ant-layout-sider-collapsed.admin-sider {
+    span.ant-avatar.ant-avatar-circle.ant-avatar-image {
+        width: 50px!important;
+        height: 50px!important;
+    }
+
+    h1 {
+        display: none;
+    }
+}
+
+aside {
+    h1 {
+        color: $color-rimac;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+}
