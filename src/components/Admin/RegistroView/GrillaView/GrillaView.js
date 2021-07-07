@@ -25,7 +25,7 @@ export default function GrillaView() {
 
     const columns = [
         {
-            title: 'NRO',
+            title: 'Nº',
             dataIndex: 'name',
             //render: (text) => <a>{text}</a>,
         },
@@ -38,29 +38,29 @@ export default function GrillaView() {
             dataIndex: 'address',
         },
         {
-            title: 'NRO PISO',
+            title: 'Nº PISO',
             dataIndex: 'piso',
         },
         {
             title: 'VAL. EDIFICIO',
             dataIndex: 'valedificio',
         },
-        // {
-        //     title: 'VAL. CONTENIDO',
-        //     dataIndex: 'valedificio',
-        // },
-        // {
-        //     title: 'VAL. LUCRO',
-        //     dataIndex: 'valedificio',
-        // },
-        // {
-        //     title: 'SUMA A. EDIFICIO',
-        //     dataIndex: 'valedificio',
-        // },
-        // {
-        //     title: 'SUMA A. CONTENIDO',
-        //     dataIndex: 'valedificio',
-        // },
+        {
+            title: 'VAL. CONTENIDO',
+            dataIndex: 'valedificio',
+        },
+        {
+            title: 'VAL. LUCRO',
+            dataIndex: 'valedificio',
+        },
+        {
+            title: 'SUMA A. EDIFICIO',
+            dataIndex: 'valedificio',
+        },
+        {
+            title: 'SUMA A. CONTENIDO',
+            dataIndex: 'valedificio',
+        },
         {
             title: 'SUMA A. LUCRO',
             dataIndex: 'valedificio',
@@ -237,24 +237,37 @@ export default function GrillaView() {
                             <Col span={6}>
                                 <h1><PushpinOutlined /> Ubicaciones</h1>
                             </Col>
-                            <Col span={2} offset={14}>
-                                <Tooltip title="Agregar">
+                            <Col span={2} offset={12}>
+                                <Tooltip placement="top" title="Agregar">
                                     <Button type="primary" 
-                                            size="large" 
-                                            shape="circle" 
-                                            icon={<PlusOutlined />}
+                                            size="default"
+                                            style={{ float: 'right' }}
                                             danger 
-                                    />
+                                    >
+                                        <PlusOutlined />
+                                    </Button>
                                 </Tooltip>    
                             </Col>
                             <Col span={2}>
-                                <Tooltip title="Eliminar">
+                                <Tooltip placement="top" title="Eliminar">
                                     <Button type="primary"
-                                            size="large" 
-                                            shape="circle" 
-                                            icon={<MinusOutlined />}
+                                            size="default"
+                                            style={{ float: 'right' }}
                                             danger 
-                                    />
+                                    >
+                                        <MinusOutlined />
+                                    </Button>
+                                </Tooltip>
+                            </Col>
+                            <Col span={2}>
+                                <Tooltip placement="top" title="Exportar Excel">
+                                    <Button type="primary"
+                                            size="default"
+                                            style={{ float: 'right' }}
+                                            danger
+                                    >
+                                        <FileExcelOutlined />
+                                    </Button>
                                 </Tooltip>
                             </Col>
                         </Row>
@@ -265,10 +278,6 @@ export default function GrillaView() {
                             columns={columns}
                             dataSource={data}
                         />
-                        <Tooltip placement="bottom" title="Exportar Excel">
-                            <Button type="default" icon={<FileExcelOutlined className="btn-export" />} size='large'>
-                            </Button>
-                        </Tooltip>
                     </Form.Item>
                 </Col>
             </Row>

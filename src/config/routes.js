@@ -16,7 +16,7 @@ const routes = [
         routes: [
             {
                 path: "/",
-                component: AdminBandeja,
+                component: AdminRegistro,
                 exact: true
             },
             {

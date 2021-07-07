@@ -1,6 +1,6 @@
 import React from 'react';
 import { Badge, Button, Form, Row, Col, Table, Tooltip } from 'antd';
-import { OrderedListOutlined, SearchOutlined, FileExcelOutlined } from '@ant-design/icons';
+import { OrderedListOutlined, SearchOutlined, FileExcelOutlined, CheckCircleOutlined } from '@ant-design/icons';
 
 import './GrillaView.scss';
 
@@ -239,29 +239,27 @@ export default function GrillaView() {
                             <Col span={3}>
                                 <Badge status="warning" text="Aprobado" />
                             </Col>
-                            <Col span={3}>
-                                <Button type="primary" 
-                                        size="default" 
-                                        danger
-                                >
-                                    REGISTRAR
-                                </Button>
+                            <Col span={2} offset={5}>
+                                <Tooltip placement="top" title="Aprobar">
+                                    <Button type="primary" 
+                                            size="default"
+                                            style={{ float: 'right' }} 
+                                            danger
+                                    >
+                                        <CheckCircleOutlined />
+                                    </Button>
+                                </Tooltip>
                             </Col>
-                            <Col span={3}>
-                                <Button type="primary" 
-                                        size="default" 
-                                        danger
-                                >
-                                    APROBAR
-                                </Button>
-                            </Col>
-                            <Col span={3}>
-                                <Button type="primary" 
-                                        size="default" 
-                                        danger
-                                >
-                                    CONSULTAR
-                                </Button>
+                            <Col span={2}>
+                                <Tooltip placement="top" title="Exportar Excel">
+                                    <Button type="primary"
+                                            size="default"
+                                            style={{ float: 'right' }}
+                                            danger
+                                    >
+                                        <FileExcelOutlined />
+                                    </Button>
+                                </Tooltip>
                             </Col>
                         </Row>
                         <Table
@@ -271,10 +269,6 @@ export default function GrillaView() {
                             columns={columns}
                             dataSource={data}
                         />
-                        <Tooltip placement="bottom" title="Exportar Excel">
-                            <Button type="default" icon={<FileExcelOutlined className="btn-export" />} size='large'>
-                            </Button>
-                        </Tooltip>
                     </Form.Item>
                 </Col>
             </Row>

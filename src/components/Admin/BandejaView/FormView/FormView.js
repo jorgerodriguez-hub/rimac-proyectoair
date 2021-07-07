@@ -1,6 +1,6 @@
 import React from 'react';
-import { Form, Input, Select, Row, Col, DatePicker } from 'antd';
-import { CheckSquareOutlined } from '@ant-design/icons';
+import { Button, Form, Input, Select, Row, Col, DatePicker, Tooltip } from 'antd';
+import { CheckSquareOutlined, SearchOutlined } from '@ant-design/icons';
 import SearchView from '../SearchView';
 
 import './FormView.scss';
@@ -10,7 +10,7 @@ export default function FormView() {
     return (
         <Form layout="vertical">
             <Form.Item>
-                <h1><CheckSquareOutlined /> Aprobación de Solicitudes de Modelamiento</h1>
+                <h1><CheckSquareOutlined /> Consulta de Solicitudes de Modelamiento</h1>
             </Form.Item>
             <Row>
                 <Col span={6}>
@@ -59,6 +59,20 @@ export default function FormView() {
                 </Col>
             </Row>
             <SearchView />
+            <Row>
+                <Col span={3}>
+                    <Form.Item>
+                        <Tooltip placement="bottom" title="Consultar">
+                            <Button type="primary"
+                                    size="default"
+                                    danger 
+                            >
+                                <SearchOutlined />
+                            </Button>
+                        </Tooltip>
+                    </Form.Item>
+                </Col>
+            </Row>
         </Form>
     );
 }
