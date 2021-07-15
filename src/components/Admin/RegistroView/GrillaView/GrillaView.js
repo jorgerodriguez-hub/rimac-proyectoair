@@ -94,126 +94,6 @@ export default function GrillaView() {
             valedificio: '$20,000,000',
             dededificio: '20,000',
             acciones: 'Modificar'
-        },
-        {
-            key: '2',
-            name: '2',
-            age: 'PE',
-            address: 'LIMA/LIMA/SAN ISIDRO',
-            piso: '1',
-            valedificio: '$20,000,000',
-            dededificio: '20,000',
-            acciones: 'Modificar'
-        },
-        {
-            key: '3',
-            name: '3',
-            age: 'PE',
-            address: 'LIMA/LIMA/MIRAFLORES',
-            piso: '1',
-            valedificio: '$20,000,000',
-            dededificio: '20,000',
-            acciones: 'Modificar'
-        },
-        {
-            key: '4',
-            name: '4',
-            age: 'PE',
-            address: 'LIMA/LIMA/SAN BORJA',
-            piso: '1',
-            valedificio: '$20,000,000',
-            dededificio: '20,000',
-            acciones: 'Modificar'
-        },
-        {
-            key: '5',
-            name: '5',
-            age: 'PE',
-            address: 'LIMA/LIMA/SAN ISIDRO',
-            piso: '1',
-            valedificio: '$20,000,000',
-            dededificio: '20,000',
-            acciones: 'Modificar'
-        },
-        {
-            key: '6',
-            name: '6',
-            age: 'PE',
-            address: 'LIMA/LIMA/BARRANCO',
-            piso: '1',
-            valedificio: '$20,000,000',
-            dededificio: '20,000',
-            acciones: 'Modificar'
-        },
-        {
-            key: '7',
-            name: '7',
-            age: 'PE',
-            address: 'LIMA/LIMA/SAN ISIDRO',
-            piso: '1',
-            valedificio: '$20,000,000',
-            dededificio: '20,000',
-            acciones: 'Modificar'
-        },
-        {
-            key: '8',
-            name: '8',
-            age: 'PE',
-            address: 'LIMA/LIMA/BARRANCO',
-            piso: '1',
-            valedificio: '$20,000,000',
-            dededificio: '20,000',
-            acciones: 'Modificar'
-        },
-        {
-            key: '9',
-            name: '9',
-            age: 'PE',
-            address: 'LIMA/LIMA/SAN BORJA',
-            piso: '1',
-            valedificio: '$20,000,000',
-            dededificio: '20,000',
-            acciones: 'Modificar'
-        },
-        {
-            key: '10',
-            name: '10',
-            age: 'PE',
-            address: 'LIMA/LIMA/MIRAFLORES',
-            piso: '1',
-            valedificio: '$20,000,000',
-            dededificio: '20,000',
-            acciones: 'Modificar'
-        },
-        {
-            key: '11',
-            name: '11',
-            age: 'PE',
-            address: 'LIMA/LIMA/BARRANCO',
-            piso: '1',
-            valedificio: '$20,000,000',
-            dededificio: '20,000',
-            acciones: 'Modificar'
-        },
-        {
-            key: '12',
-            name: '12',
-            age: 'PE',
-            address: 'LIMA/LIMA/SAN BORJA',
-            piso: '1',
-            valedificio: '$20,000,000',
-            dededificio: '20,000',
-            acciones: 'Modificar'
-        },
-        {
-            key: '13',
-            name: '13',
-            age: 'PE',
-            address: 'LIMA/LIMA/MIRAFLORES',
-            piso: '1',
-            valedificio: '$20,000,000',
-            dededificio: '20,000',
-            acciones: 'Modificar'
         }
     ]; // rowSelection object indicates the need for row selection
       
@@ -323,11 +203,6 @@ export default function GrillaView() {
                                         <Input placeholder="" />
                                     </Form.Item>
                                 </Col>
-                                <Col span={12}>
-                                    <Form.Item label="Segmento">
-                                        <Input placeholder="" />
-                                    </Form.Item>
-                                </Col>
                             </Row>
                             <Row>
                                 <Col span={12}>
@@ -383,11 +258,6 @@ export default function GrillaView() {
                                     </Form.Item>
                                 </Col>
                                 <Col span={6}>
-                                    <Form.Item label="Moneda">
-                                        <Input placeholder="" />
-                                    </Form.Item>
-                                </Col>
-                                <Col span={6}>
                                     <Form.Item label="Valor de Contenido">
                                         <Input placeholder="" />
                                     </Form.Item>
@@ -397,13 +267,13 @@ export default function GrillaView() {
                                         <Input placeholder="" />
                                     </Form.Item>
                                 </Col>
-                            </Row>
-                            <Row>
                                 <Col span={6}>
                                     <Form.Item label="Días Cubiertos">
                                         <Input placeholder="" />
                                     </Form.Item>
                                 </Col>
+                            </Row>
+                            <Row>
                                 <Col span={6}>
                                     <Form.Item label="Tipo de Deducible">
                                         <Input placeholder="" />
@@ -419,13 +289,13 @@ export default function GrillaView() {
                                         <Input placeholder="" />
                                     </Form.Item>
                                 </Col>
-                            </Row>
-                            <Row>
                                 <Col span={6}>
                                     <Form.Item label="% Deducible Contenido">
                                         <Input placeholder="" />
                                     </Form.Item>
                                 </Col>
+                            </Row>
+                            <Row>
                                 <Col span={6}>
                                     <Form.Item label="Deducible Contenido">
                                         <Input placeholder="" />
@@ -441,13 +311,13 @@ export default function GrillaView() {
                                         <Input placeholder="" />
                                     </Form.Item>
                                 </Col>
-                            </Row>
-                            <Row>
                                 <Col span={6}>
                                     <Form.Item label="Tipo Suma Asegurada">
                                         <Input placeholder="" />
                                     </Form.Item>
                                 </Col>
+                            </Row>
+                            <Row>
                                 <Col span={6}>
                                     <Form.Item label="Suma Asegurada Edificio">
                                         <Input placeholder="" />

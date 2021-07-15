@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import { Button, Col, Form, Input, Row, Select } from 'antd';
 import { CaretDownOutlined, CaretUpOutlined } from '@ant-design/icons';
 
+import './SearchView.scss';
+
 function Container(props) {
     if (!props.warn) {
       return null;
@@ -53,7 +55,7 @@ export default class SearchView extends React.Component {
         return (
         <div>
             <Button type="link" onClick={this.handleToggleClick}>
-                {this.state.showWarning ? <span>Búsqueda Avanzada <CaretUpOutlined /></span> : <span>Búsqueda Avanzada <CaretDownOutlined /></span>}
+                {this.state.showWarning ? <span className="busqueda-avazanda">Búsqueda Avanzada <CaretUpOutlined /></span> : <span className="busqueda-avazanda">Búsqueda Avanzada <CaretDownOutlined /></span>}
             </Button>
             <Container warn={this.state.showWarning} />
         </div>
