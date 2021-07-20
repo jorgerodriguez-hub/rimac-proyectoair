@@ -1,11 +1,11 @@
 import React, {useState, useEffect} from 'react';
-import { Button, Checkbox, Form, Input, Select, Row, Col, DatePicker, Upload, Result, Tooltip, message, notification, Tabs, Table, Modal } from 'antd';
+import { Button, Checkbox, Form, Input, Select, Row, Col, Progress, DatePicker, Upload, Result, Tooltip, message, notification, Tabs, Table, Modal } from 'antd';
 import { FileExcelOutlined, FormOutlined, RetweetOutlined, CheckCircleOutlined, MinusOutlined, PlusOutlined, PushpinOutlined, SearchOutlined, UserAddOutlined, NotificationTwoTone } from '@ant-design/icons';
-//import { useFetchCombos } from '../../../../hooks/useFetch';
 import { sendExcel } from '../../../../api/excel';
 import GoogleMap from '../GoogleMap';
 import { registroApi } from '../../../../api/excel';
 import moment from 'moment';
+import axios from 'axios';
 
 import './FormView.scss';
 
@@ -14,6 +14,12 @@ export default function FormView() {
     const { Option } = Select;
 
     const { TabPane } = Tabs;
+
+    const [isResultVisible, setIsResultVisible] = useState(false);
+    
+    const [progress, setProgress] = useState(0);
+
+    const [isResultErrorVisible, setIsResultErrorVisible] = useState(false);
 
     const [isModalVisible2, setIsModalVisible2] = useState(false);
 
@@ -29,7 +35,7 @@ export default function FormView() {
         setIsModalVisible2(false);
     };
 
-    const [state, setState] = useState({ cliente : '', total : '', inicio : '', final : '', moneda : '' });
+    const [state, setState] = useState({ cliente : '', ruc : '', total : '', inicio : '', final : '', moneda : '', ubicaciones: [] });
 
     const [markers, setMarkers] = useState([]);
 
@@ -45,12 +51,12 @@ export default function FormView() {
             dataIndex: 'pais',
         },
         {
-            title: 'MONEDA',
-            dataIndex: 'moneda',
+            title: 'UBIGEO',
+            dataIndex: 'ubigeo',
         },
         {
-            title: 'Nº PISO',
-            dataIndex: 'piso',
+            title: 'MONEDA',
+            dataIndex: 'moneda',
         },
         {
             title: 'VAL. EDIFICIO',
@@ -95,17 +101,15 @@ export default function FormView() {
         },
     ];
 
-    console.log('markers', markers);
-
     const data = markers.map((marker, index) => (
         {
             key: index,
-            numero: index,
+            numero: index+1,
             pais: 'PE',
+            ubigeo: marker.direccion.departamento+'/'+marker.direccion.provincia+'/'+marker.direccion.distrito,
             moneda: 'USD',
-            piso: marker.caracteristica.pisos,
-            valedificio: marker.valor_declarado.bienes[0].valor,
-            valcontenido: marker.valor_declarado.bienes[12].valor,
+            valedificio: parseFloat(marker.valor_declarado.bienes[0].valor).toFixed(2),
+            valcontenido: parseFloat(marker.valor_declarado.bienes[12].valor).toFixed(2),
             valucro: marker.valor_declarado.bienes[13].valor
         }
     ));
@@ -116,34 +120,128 @@ export default function FormView() {
         }
     };
 
-    //const { data:monedas, loading } = useFetchCombos();
-
-    const convertirBase64 = (file) => {
-        Array.from(file).map( async(file) => {
-            let reader = new FileReader();
-            reader.readAsDataURL(file);
-            let arrayAuxiliar = [];
-            reader.onload = async function() {
-                let base64 = reader.result;
-                arrayAuxiliar = base64.split(',');
-                await sendExcel(arrayAuxiliar)
-                    .then(response => {
-                        notification["success"]({
-                            message: "El archivo fue procesado correctamente."
-                        });
-                        arrayAuxiliar = {};
-                        console.log(response);
-                        setState({ cliente : response.cliente.asegurado, total : response.total_declarado, inicio : response.cliente.fecha_inicio, final : response.cliente.fecha_final, moneda : response.cliente.moneda });
-                        setMarkers(response.direcciones);
-                    })
-                    .catch(() => {
-                        notification["error"]({
-                            message: "Error en el servidor."
-                        });
-                    });
+    const props = {
+        action: 'https://z16vwhmxyf.execute-api.us-east-1.amazonaws.com/dev/excel',
+        multiple: false,
+        accept: '.xls, .xlsx',
+        showUploadList: true,
+        maxCount: 1,
+        headers: {
+            'Content-Type': 'text/plain'
+        },
+        onSuccess(res, file) {
+            console.log('onSuccess', res, file.name);
+        },
+        onError(err) {
+            console.log('onError', err);
+        },
+        onProgress({ percent }, file) {
+            console.log('onProgress', `${percent}%`, file.name, file);
+        },
+        onChange(info) {
+            if (info.file.status !== 'uploading') {
+              console.log(info.file, info.fileList);
             }
-        });
-    };
+            if (info.file.status === 'done') {
+              message.success(`${info.file.name} file uploaded successfully`);
+            } else if (info.file.status === 'error') {
+              message.error(`${info.file.name} file upload failed.`);
+            }
+        },
+        customRequest({
+            action,
+            file,
+            headers,
+            onError,
+            onProgress,
+            onSuccess,
+        }) {
+
+            const getBase64 = () => {
+                return new Promise(resolve => {
+                  let baseURL = "";          
+                  let arrayAuxiliar = [];
+                  let reader = new FileReader();    
+                  reader.readAsDataURL(file);              
+                  reader.onload = () => {
+                    baseURL = reader.result;
+                    arrayAuxiliar = baseURL.split(',');
+                    resolve(arrayAuxiliar);
+                    axios
+                        .post(action, arrayAuxiliar[1], {
+                            headers,
+                            onUploadProgress: ({ total, loaded }) => {
+                                const percent = Math.floor((loaded / total) * 100);
+                                setProgress(percent);
+                                if (percent === 100) {
+                                    setTimeout(() => setProgress(0), 2000);
+                                }
+                                onProgress({ percent: Math.round((loaded / total) * 100).toFixed(2) }, file);
+                            },
+                        })
+                        .then(( response ) => {
+                            onSuccess(response, file);
+                            if (response.status === 200) {
+                                setIsResultVisible(false);
+                                setIsResultVisible(true);
+                            } else if (response.status === 400) {
+                                setIsResultErrorVisible(true)
+                            }
+                            setState({ 
+                                cliente : response.data.cliente.asegurado,
+                                ruc: response.data.cliente.ruc, 
+                                total : parseFloat(response.data.total_declarado).toFixed(2), 
+                                inicio : response.data.cliente.fecha_inicio, 
+                                final : response.data.cliente.fecha_final, 
+                                moneda : response.data.cliente.moneda, 
+                                ubicaciones : response.data.direcciones 
+                            });
+                            setMarkers(response.data.direcciones);
+                        })
+                        .catch(onError);
+                  };
+                });
+            };
+
+            getBase64();
+    
+        },
+    };    
+
+    // const convertirBase64 = (file) => {
+    //     Array.from(file).map( async(file) => {
+    //         console.log('bunny', file);
+    //         let reader = new FileReader();
+    //         reader.readAsDataURL(file);
+    //         let arrayAuxiliar = [];
+    //         reader.onload = async function() {
+    //             let base64 = reader.result;
+    //             arrayAuxiliar = base64.split(',');
+    //             await sendExcel(arrayAuxiliar)
+    //                 .then(response => {
+    //                     notification["success"]({
+    //                         message: "El archivo fue procesado correctamente."
+    //                     });
+    //                     arrayAuxiliar = {};
+    //                     console.log(response);
+    //                     setState({ cliente : response.cliente.asegurado,
+    //                                ruc: response.cliente.ruc, 
+    //                                total : response.total_declarado, 
+    //                                inicio : response.cliente.fecha_inicio, 
+    //                                final : response.cliente.fecha_final, 
+    //                                moneda : response.cliente.moneda, 
+    //                                ubicaciones : response.direcciones 
+    //                     });
+    //                     setMarkers(response.direcciones);
+    //                 })
+    //                 .catch(() => {
+    //                     notification["error"]({
+    //                         message: "Error en el servidor."
+    //                     });
+    //                 });
+    //         }
+    //     });
+    // };
 
     const [modalMarker, setModalMarker] = useState(null);
 
@@ -153,11 +251,8 @@ export default function FormView() {
         const result = markers[text.key];
         setModalMarker(result);
         setIsModalVisible(true);
-        console.log('holis', value, result, text);
-        console.log('mmarker', modalMarker);
+        console.log('render', value, result, text);
     };
-
-    console.log('mmarker2', modalMarker);
   
     const handleOk = () => {
         setIsModalVisible(false);
@@ -173,73 +268,16 @@ export default function FormView() {
             //id: "sol_1626156839143",
             //iduser: "01",
             cod_cliente: "202109",
-            ruc: "20131373237",
+            ruc: state.ruc,
             asegurado: state.cliente,
             tipo_suma_asegurada: "B",
             moneda: "PEN",
             suma_asegurada: state.cliente,
             fecha_inicio: state.inicio,
             fecha_expiracion: state.final,
-            segmento: "01",
+            segmento: "BRUNITO",
             tipo_modelamiento: "01",
-            direcciones: {
-                "0": {
-                    "suma_asegurada_lucro": "20000000",
-                    "valor_edificio": "20000000",
-                    "suma_asegurada_edificio": "20000000",
-                    "tipo_suma_asegurada_ubicacion": "C",
-                    "dias_cubiertos": "12",
-                    "nro_piso": "9",
-                    "provincia": "010101",
-                    "codigo_construccion": "2210",
-                    "longitud": "-77.0329272",
-                    "valor_lucro_cesante": "20000000",
-                    "deducible_contenido": "20000000",
-                    "per_deducible_contenido": "%16",
-                    "distrito": "010101",
-                    "latitud": "-12.1220737",
-                    "cantidad_dias_lucro": "12",
-                    "suma_asegurada_contenido": "20000000",
-                    "direccion": "Av. REPÚBLICA DE COLOMBIA NRO. 791 OF. 903 LIMA, San Isidro",
-                    "codigo_uso": "300",
-                    "pais": "PE",
-                    "valor_contenido": "20000000",
-                    "per_deducible_edificio": "%16",
-                    "tipo_deducible": "C",
-                    "deducible_lucro_cesante": "20000000",
-                    "departamento": "010101",
-                    "deducible_edificio": "20000000",
-                    "anio_construccion": "2017"
-                },
-                "1": {
-                    "suma_asegurada_lucro": "20000000",
-                    "valor_edificio": "20000000",
-                    "suma_asegurada_edificio": "20000000",
-                    "tipo_suma_asegurada_ubicacion": "C",
-                    "dias_cubiertos": "12",
-                    "nro_piso": "9",
-                    "provincia": "010101",
-                    "codigo_construccion": "2210",
-                    "longitud": "-77.0329272",
-                    "valor_lucro_cesante": "20000000",
-                    "deducible_contenido": "20000000",
-                    "per_deducible_contenido": "%16",
-                    "distrito": "010101",
-                    "latitud": "-12.1220737",
-                    "cantidad_dias_lucro": "12",
-                    "suma_asegurada_contenido": "20000000",
-                    "direccion": "Av. REPÚBLICA DE COLOMBIA NRO. 791 OF. 903 LIMA, San Isidro",
-                    "codigo_uso": "300",
-                    "pais": "PE",
-                    "valor_contenido": "20000000",
-                    "per_deducible_edificio": "%16",
-                    "tipo_deducible": "C",
-                    "deducible_lucro_cesante": "20000000",
-                    "departamento": "010101",
-                    "deducible_edificio": "20000000",
-                    "anio_construccion": "2017"
-                }
-            }
+            direcciones: markers
         };
 
         registroApi(finalData)
@@ -247,23 +285,23 @@ export default function FormView() {
                 notification["success"]({
                     message: "Registrado satisfactoriamente"
                 });
-                //finalData= {};
             })
             .catch(() => {
                 notification["error"]({
                     message: "Error en el servidor."
                 });
             });
-        console.log('final', finalData);
     }
 
     function handleChange(value) {
         console.log(`selected ${value}`);
     }
-    
-    useEffect(() => {
 
-    }, [setModalMarker]);
+    const dateFormat = 'DD/MM/YYYY';
+
+    // console.log('state', state);
+    // console.log('markers', markers);
+    console.log('DATA EL MODAL MARKER ->', modalMarker);
 
     return (
         <Form layout="vertical">
@@ -271,15 +309,12 @@ export default function FormView() {
                 <h1><FormOutlined /> Registro de Solicitudes de Modelamiento</h1>
             </Form.Item>
             <Row>
-                {/* <Col span={16}>
+                <Col span={16}>
                     <Form.Item>
-                        <Checkbox style={{ float: "right" }} checked="cheked">SBS Standar AIR</Checkbox>
+                        <Checkbox style={{ float: "left" }} checked="cheked">SBS Standar AIR</Checkbox>
                     </Form.Item>
                     <Form.Item>
-                        <Dragger name='file'
-                                 multiple={false}
-                                 accept='.xls, .xlsx'
-                        >
+                        <Dragger {...props}>
                                 <p className="ant-upload-drag-icon">
                                     <FileExcelOutlined />
                                 </p>
@@ -288,31 +323,37 @@ export default function FormView() {
                                 Haga clic o arrastre el archivo a esta área para cargar
                                 </p>
                         </Dragger>
+                        {progress > 0 ? <Progress percent={progress} /> : null}
                     </Form.Item>
-                </Col> */}
-                {/* <Col span={8}>
-                    <Result
-                        status="success"
-                        title="Archivo procesado correctamente!"
-                        // subTitle="Order number: 2017182818828182881 Cloud server configuration takes 1-5 minutes, please wait."
-                        // extra={[
-                        // <Button type="primary" key="console">
-                        //     Go Console
-                        // </Button>,
-                        // <Button key="buy">Buy Again</Button>,
-                        // ]}
-                    />
-                </Col> */}
-            </Row>
-            <Row>
-                <Form.Item>
-                    <Input type="file" onChange={(e)=>convertirBase64(e.target.files)} />
-                </Form.Item>
+                </Col>
+                <Col span={8}>
+                    <Form.Item>
+                    { isResultVisible ? <Result
+                            className="animate__animated animate__bounceInRight"
+                            status="success"
+                            title="Archivo procesado satisfactoriamente!"
+                        /> : null }
+
+                    { isResultErrorVisible ? <Result
+                            className="animate__animated animate__bounceInRight"
+                            status="error"
+                            title="El archivo fue procesado con errores."
+                            extra={[
+                            <Button 
+                                type="primary" 
+                                danger
+                            >
+                                Ver Errores de Validación
+                            </Button>
+                            ]}
+                        /> : null }
+
+                    </Form.Item>
+                </Col>
             </Row>
             <Row>
                 <Col span={6}>
                     <Form.Item label="Cliente/Asegurado">
-                        {/* <Input placeholder="" value={state.cliente} onChange={(e)=>setState({ ...state, cliente:e.target.value })} /> */}
                         <Input placeholder="" value={state.cliente} disabled />
                     </Form.Item>
                 </Col>
@@ -331,19 +372,29 @@ export default function FormView() {
                 </Col>
                 <Col span={6}>
                     <Form.Item label="Suma Asegurada">
-                        <Input value={state.total} onChange={(e)=>setState({ ...state, total:e.target.value })} disabled />
+                        <Input value={state.total} disabled />
                     </Form.Item>
                 </Col>
             </Row>
             <Row>
                 <Col span={6}>
                     <Form.Item label="Fecha Inicio">
-                        <Input value={state.inicio} disabled />
+                        <DatePicker
+                            defaultValue={state.inicio ? moment(state.inicio) : moment()}
+                            format={dateFormat}
+                            onChange={(date, dateString) => setState({ ...state, inicio:dateString })}
+                            value={state.inicio ? moment(state.inicio) : moment()} 
+                        />
                     </Form.Item>
                 </Col>
                 <Col span={6}>
                     <Form.Item label="Fecha Expiración">
-                        <Input value={state.final} disabled />
+                        <DatePicker
+                            defaultValue={state.final ? moment(state.final) : moment()} 
+                            format={dateFormat}
+                            onChange={(date, dateString) => setState({ ...state, final:dateString })}
+                            value={state.final ? moment(state.final) : moment()} 
+                        />
                     </Form.Item>
                 </Col>
                 <Col span={6}>
@@ -449,12 +500,25 @@ export default function FormView() {
                 title="Registro de Ubicaciones"
                 centered
                 visible={isModalVisible}
-                onOk={handleOk}
-                onCancel={handleCancel}
                 width={1000}
+                onCancel={handleCancel}
+                footer={[
+                    <Button 
+                        onClick={handleCancel}
+                        danger
+                    >
+                      ATRÁS
+                    </Button>,
+                    <Button
+                        type="primary"
+                        onClick={handleOk}
+                        danger
+                    >
+                      GUARDAR
+                    </Button>,
+                ]}
             >
-        {modalMarker && (
-            
+        { modalMarker && (
             <Tabs defaultActiveKey="1" centered>
                 <TabPane tab="Display 1" key="1">
                     <Row>
@@ -493,12 +557,12 @@ export default function FormView() {
                             <Row>
                                 <Col span={12}>
                                     <Form.Item label="Latitud">
-                                        <Input value={modalMarker.latitud} onChange={(e)=>setModalMarker({ ...modalMarker, latitud:parseFloat(e.target.value) })} />
+                                        <Input value={modalMarker.direccion.latitud} onChange={(e)=>setModalMarker({ ...modalMarker, latitud:parseFloat(e.target.value) })} />
                                     </Form.Item>
                                 </Col>
                                 <Col span={12}>
                                     <Form.Item label="Longitud">
-                                        <Input value={modalMarker.longitud} onChange={(e)=>setModalMarker({ ...modalMarker, longitud:parseFloat(e.target.value) })} />
+                                        <Input value={modalMarker.direccion.longitud} onChange={(e)=>setModalMarker({ ...modalMarker, longitud:parseFloat(e.target.value) })} />
                                     </Form.Item>
                                 </Col>
                             </Row>
@@ -517,37 +581,35 @@ export default function FormView() {
                             <Row>
                                 <Col span={12}>
                                     <Form.Item label="Tipo de Código de Construcción">
-                                    <Select defaultValue="C" disabled>
-                                        <Option key="01" value="C">C</Option>
-                                        <Option key="02" value="S">S</Option>
+                                    <Select defaultValue="AIR" disabled>
+                                        <Option key="01" value="AIR">AIR</Option>
                                     </Select>
                                     </Form.Item>
                                 </Col>
                                 <Col span={12}>
                                     <Form.Item label="Código de Construcción">
-                                        <Input disabled />
+                                        <Input value={modalMarker.caracteristica.tep} disabled />
                                     </Form.Item>
                                 </Col>
                             </Row>
                             <Row>
                                 <Col span={12}>
                                     <Form.Item label="Tipo de Código de Uso" wrapperCol={{ span: 24 }}>
-                                    <Select defaultValue="CE" disabled>
-                                        <Option key="01" value="CE">C</Option>
-                                        <Option key="02" value="SS">S</Option>
+                                    <Select defaultValue="AIR" disabled>
+                                        <Option key="01" value="AIR">AIR</Option>
                                     </Select>
                                     </Form.Item>
                                 </Col>
                                 <Col span={12}>
                                     <Form.Item label="Código de Uso">
-                                        <Input disabled />
+                                        <Input value={modalMarker.caracteristica.uso} disabled />
                                     </Form.Item>
                                 </Col>
                             </Row>
                         </Col>
                         <Col span={12}>
                             <>
-                                <GoogleMap longitud={modalMarker.longitud} latitud={modalMarker.latitud} />
+                                <GoogleMap longitud={modalMarker.direccion.longitud} latitud={modalMarker.direccion.latitud} />
                             </>
                         </Col>
                     </Row>
@@ -648,29 +710,46 @@ export default function FormView() {
                     </Row>
                 </TabPane>
             </Tabs>
-            
         )}
-           </Modal>
-        
-            <Modal title="Registro de Clientes" visible={isModalVisible2} onOk={handleOk2} onCancel={handleCancel2}>
-                <Row>
-                    <Col span={12}>
-                        <Form.Item label="Nro de RUC">
-                            <Input placeholder="" />
-                        </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                        <Form.Item label="Razón Social">
-                            <Input placeholder="" />
-                        </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                        <Form.Item label="Segmento">
-                            <Input placeholder="" />
-                        </Form.Item>
-                    </Col>
-                </Row>
-            </Modal>
+        </Modal>
+        <Modal 
+            title="Registro de Clientes" 
+            visible={isModalVisible2}
+            onCancel={handleCancel2}
+            footer={[
+                <Button 
+                    onClick={handleCancel2}
+                    danger
+                >
+                    ATRÁS
+                </Button>,
+                <Button
+                    type="primary"
+                    onClick={handleOk2}
+                    danger
+                >
+                    GUARDAR
+                </Button>,
+            ]}
+        >
+            <Row>
+                <Col span={12}>
+                    <Form.Item label="Nro de RUC">
+                        <Input placeholder="" />
+                    </Form.Item>
+                </Col>
+                <Col span={12}>
+                    <Form.Item label="Razón Social">
+                        <Input placeholder="" />
+                    </Form.Item>
+                </Col>
+                <Col span={12}>
+                    <Form.Item label="Segmento">
+                        <Input placeholder="" />
+                    </Form.Item>
+                </Col>
+            </Row>
+        </Modal>
     </Form>
     );
 }

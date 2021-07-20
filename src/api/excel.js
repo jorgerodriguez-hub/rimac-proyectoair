@@ -1,5 +1,7 @@
 export async function sendExcel(base64) {
 
+    console.log('wasson', base64[1]);
+
     const url = `https://z16vwhmxyf.execute-api.us-east-1.amazonaws.com/dev/excel`;
 
     const params = {
