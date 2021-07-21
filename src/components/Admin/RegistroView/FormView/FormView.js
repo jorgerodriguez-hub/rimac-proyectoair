@@ -1,11 +1,11 @@
 import React, {useState, useEffect} from 'react';
-import { Button, Checkbox, Form, Input, Select, Row, Col, Progress, DatePicker, Upload, Result, Tooltip, message, notification, Tabs, Table, Modal } from 'antd';
-import { FileExcelOutlined, FormOutlined, RetweetOutlined, CheckCircleOutlined, MinusOutlined, PlusOutlined, PushpinOutlined, SearchOutlined, UserAddOutlined, NotificationTwoTone } from '@ant-design/icons';
+import { List, Typography, Divider, Button, Checkbox, Form, Input, Select, Row, Col, Progress, DatePicker, Upload, Result, Tooltip, message, notification, Tabs, Table, Modal } from 'antd';
+import { FileExcelOutlined, FormOutlined, EyeOutlined, RetweetOutlined, CheckCircleOutlined, MinusOutlined, PlusOutlined, PushpinOutlined, SearchOutlined, UserAddOutlined, NotificationTwoTone } from '@ant-design/icons';
 import { sendExcel } from '../../../../api/excel';
-import GoogleMap from '../GoogleMap';
 import { registroApi } from '../../../../api/excel';
 import moment from 'moment';
 import axios from 'axios';
+import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 
 import './FormView.scss';
 
@@ -23,6 +23,20 @@ export default function FormView() {
 
     const [isModalVisible2, setIsModalVisible2] = useState(false);
 
+    const [isModalVisible3, setIsModalVisible3] = useState(false);
+
+    const showModal3 = () => {
+        setIsModalVisible3(true);
+    };
+  
+    const handleOk3 = () => {
+        setIsModalVisible3(false);
+    };
+  
+    const handleCancel3 = () => {
+        setIsModalVisible3(false);
+    };
+
     const showModal2 = () => {
         setIsModalVisible2(true);
     };
@@ -38,6 +52,8 @@ export default function FormView() {
     const [state, setState] = useState({ cliente : '', ruc : '', total : '', inicio : '', final : '', moneda : '', ubicaciones: [] });
 
     const [markers, setMarkers] = useState([]);
+
+    const [errores, setErrores] = useState([]);
 
     const { Dragger } = Upload;
 
@@ -138,16 +154,6 @@ export default function FormView() {
         onProgress({ percent }, file) {
             console.log('onProgress', `${percent}%`, file.name, file);
         },
-        onChange(info) {
-            if (info.file.status !== 'uploading') {
-              console.log(info.file, info.fileList);
-            }
-            if (info.file.status === 'done') {
-              message.success(`${info.file.name} file uploaded successfully`);
-            } else if (info.file.status === 'error') {
-              message.error(`${info.file.name} file upload failed.`);
-            }
-        },
         customRequest({
             action,
             file,
@@ -174,18 +180,27 @@ export default function FormView() {
                                 const percent = Math.floor((loaded / total) * 100);
                                 setProgress(percent);
                                 if (percent === 100) {
-                                    setTimeout(() => setProgress(0), 2000);
+                                    setTimeout(() => setProgress(0), 5000);
                                 }
                                 onProgress({ percent: Math.round((loaded / total) * 100).toFixed(2) }, file);
                             },
                         })
                         .then(( response ) => {
                             onSuccess(response, file);
-                            if (response.status === 200) {
+                            console.log('THIS IS REPONSE->', response);
+                            if (response.data.mensajes) {
+                                setIsResultVisible(false);
+                                setIsResultErrorVisible(false);
+                                setIsResultErrorVisible(true);
+                                setState({});
+                                setMarkers([]);
+                                setErrores(response.data.mensajes);
+
+                            } else {
+                                setIsResultErrorVisible(false);
                                 setIsResultVisible(false);
                                 setIsResultVisible(true);
-                            } else if (response.status === 400) {
-                                setIsResultErrorVisible(true)
+
                             }
                             setState({ 
                                 cliente : response.data.cliente.asegurado,
@@ -299,10 +314,24 @@ export default function FormView() {
 
     const dateFormat = 'DD/MM/YYYY';
 
-    // console.log('state', state);
-    // console.log('markers', markers);
-    console.log('DATA EL MODAL MARKER ->', modalMarker);
+    console.log('THIS IS STATE->', state);
+    console.log('THIS IS MARKERS->', markers);
+    console.log('THIS IS MODALMARKER', modalMarker);
+    console.log('THIS IS ERRORES', errores);
 
+    const mapStyles = {
+        width: '100%',
+        height: '100%'
+    };
+
+    const data2 = [
+        'Racing car sprays burning fuel into crowd.',
+        'Japanese princess to wed commoner.',
+        'Australian walks 100km after outback crash.',
+        'Man charged over missing wedding girl.',
+        'Los Angeles battles huge wildfires.',
+    ];
+      
     return (
         <Form layout="vertical">
             <Form.Item>
@@ -311,7 +340,7 @@ export default function FormView() {
             <Row>
                 <Col span={16}>
                     <Form.Item>
-                        <Checkbox style={{ float: "left" }} checked="cheked">SBS Standar AIR</Checkbox>
+                        <Checkbox checked="cheked">SBS Standar AIR</Checkbox>
                     </Form.Item>
                     <Form.Item>
                         <Dragger {...props}>
@@ -339,12 +368,13 @@ export default function FormView() {
                             status="error"
                             title="El archivo fue procesado con errores."
                             extra={[
-                            <Button 
+                                <Tooltip placement="bottom" title="Ver Errores"><Button 
                                 type="primary" 
                                 danger
+                                onClick={showModal3}
                             >
-                                Ver Errores de Validación
-                            </Button>
+                                <EyeOutlined />
+                            </Button></Tooltip>
                             ]}
                         /> : null }
 
@@ -380,20 +410,18 @@ export default function FormView() {
                 <Col span={6}>
                     <Form.Item label="Fecha Inicio">
                         <DatePicker
-                            defaultValue={state.inicio ? moment(state.inicio) : moment()}
                             format={dateFormat}
                             onChange={(date, dateString) => setState({ ...state, inicio:dateString })}
-                            value={state.inicio ? moment(state.inicio) : moment()} 
+                            value={state.inicio ? moment(state.inicio, dateFormat) : moment()} 
                         />
                     </Form.Item>
                 </Col>
                 <Col span={6}>
                     <Form.Item label="Fecha Expiración">
                         <DatePicker
-                            defaultValue={state.final ? moment(state.final) : moment()} 
                             format={dateFormat}
                             onChange={(date, dateString) => setState({ ...state, final:dateString })}
-                            value={state.final ? moment(state.final) : moment()} 
+                            value={state.final ? moment(state.final, dateFormat) : moment()} 
                         />
                     </Form.Item>
                 </Col>
@@ -450,7 +478,25 @@ export default function FormView() {
                         <Col span={6}>
                             <h1><PushpinOutlined /> Ubicaciones</h1>
                         </Col>
-                        <Col span={2} offset={12}>
+                        <Col span={4} offset={14}>
+                            <Tooltip placement="top" title="Exportar Excel">
+                                <Button type="primary"
+                                        size="default"
+                                        style={{ float: 'right', marginLeft: 10 }}
+                                        danger
+                                >
+                                    <FileExcelOutlined />
+                                </Button>
+                            </Tooltip>  
+                            <Tooltip placement="top" title="Eliminar">
+                                <Button type="primary"
+                                        size="default"
+                                        style={{ float: 'right', marginLeft: 10 }}
+                                        danger 
+                                >
+                                    <MinusOutlined />
+                                </Button>
+                            </Tooltip>
                             <Tooltip placement="top" title="Agregar">
                                 <Button type="primary" 
                                         size="default"
@@ -459,29 +505,7 @@ export default function FormView() {
                                 >
                                     <PlusOutlined />
                                 </Button>
-                            </Tooltip>    
-                        </Col>
-                        <Col span={2}>
-                            <Tooltip placement="top" title="Eliminar">
-                                <Button type="primary"
-                                        size="default"
-                                        style={{ float: 'right' }}
-                                        danger 
-                                >
-                                    <MinusOutlined />
-                                </Button>
-                            </Tooltip>
-                        </Col>
-                        <Col span={2}>
-                            <Tooltip placement="top" title="Exportar Excel">
-                                <Button type="primary"
-                                        size="default"
-                                        style={{ float: 'right' }}
-                                        danger
-                                >
-                                    <FileExcelOutlined />
-                                </Button>
-                            </Tooltip>
+                            </Tooltip>  
                         </Col>
                     </Row>
                     <Table
@@ -557,12 +581,42 @@ export default function FormView() {
                             <Row>
                                 <Col span={12}>
                                     <Form.Item label="Latitud">
-                                        <Input value={modalMarker.direccion.latitud} onChange={(e)=>setModalMarker({ ...modalMarker, latitud:parseFloat(e.target.value) })} />
+                                        <Input 
+                                            value={modalMarker.direccion.latitud}
+                                            onChange={(e)=>setModalMarker({ ...modalMarker, direccion: { 
+                                                departamento: modalMarker.direccion.departamento,
+                                                distrito: modalMarker.direccion.provincia,
+                                                giro_negocio: modalMarker.direccion.giro_negocio,
+                                                latitud:parseFloat(e.target.value),
+                                                longitud:modalMarker.direccion.longitud,
+                                                nombre_via: modalMarker.direccion.nombre_via,
+                                                numero: modalMarker.direccion.numero,
+                                                provincia: modalMarker.direccion.provincia,
+                                                referencia: modalMarker.direccion.referencia,
+                                                tipo_via: modalMarker.direccion.tipo_via,
+                                                urbanizacion: modalMarker.direccion.urbanizacion,
+                                            } })}
+                                        />
                                     </Form.Item>
                                 </Col>
                                 <Col span={12}>
                                     <Form.Item label="Longitud">
-                                        <Input value={modalMarker.direccion.longitud} onChange={(e)=>setModalMarker({ ...modalMarker, longitud:parseFloat(e.target.value) })} />
+                                        <Input 
+                                            value={modalMarker.direccion.longitud} 
+                                            onChange={(e)=>setModalMarker({ ...modalMarker, direccion: {
+                                                departamento:modalMarker.direccion.departamento,
+                                                distrito: modalMarker.direccion.provincia,
+                                                giro_negocio: modalMarker.direccion.giro_negocio,
+                                                latitud: modalMarker.direccion.latitud,
+                                                longitud:parseFloat(e.target.value),
+                                                nombre_via: modalMarker.direccion.nombre_via,
+                                                numero: modalMarker.direccion.numero,
+                                                provincia: modalMarker.direccion.provincia,
+                                                referencia: modalMarker.direccion.referencia,
+                                                tipo_via: modalMarker.direccion.tipo_via,
+                                                urbanizacion: modalMarker.direccion.urbanizacion,
+                                            } })} 
+                                        />
                                     </Form.Item>
                                 </Col>
                             </Row>
@@ -608,9 +662,23 @@ export default function FormView() {
                             </Row>
                         </Col>
                         <Col span={12}>
-                            <>
-                                <GoogleMap longitud={modalMarker.direccion.longitud} latitud={modalMarker.direccion.latitud} />
-                            </>
+                                <LoadScript
+                                    googleMapsApiKey='AIzaSyBlmA6WWmOCDNwP1Cnqihm4VCB-dK35hac'>
+                                        <GoogleMap
+                                            mapContainerStyle={mapStyles}
+                                            zoom={13}
+                                            center={{
+                                                lat: modalMarker.direccion.latitud,
+                                                lng: modalMarker.direccion.longitud
+                                            }}
+                                        >
+                                            <Marker position={{
+                                                lat: modalMarker.direccion.latitud,
+                                                lng: modalMarker.direccion.longitud
+                                            }}
+                                            />
+                                        </GoogleMap>
+                                </LoadScript>
                         </Col>
                     </Row>
                 </TabPane>
@@ -749,6 +817,29 @@ export default function FormView() {
                     </Form.Item>
                 </Col>
             </Row>
+        </Modal>
+        <Modal 
+            title="Errores de Validación" 
+            visible={isModalVisible3}
+            onCancel={handleCancel3}
+            width={1000}
+            footer={[
+                <Button
+                    type="primary"
+                    onClick={handleOk3}
+                    danger
+                >
+                    CERRAR
+                </Button>,
+            ]}
+        >
+            <>
+                <List bordered>
+                {errores.map( ( {mensaje, index} ) => {
+                    return <List.Item key={index}><Typography.Text type="danger">[ERROR]</Typography.Text> {mensaje}</List.Item>
+                })}
+                </List>
+            </>
         </Modal>
     </Form>
     );

@@ -17,63 +17,63 @@ h1, label {
 input.ant-input {
     border-radius: 4px;
     color: $gray3;
-    border-color: $gray4;
+    border-color: $color-rimac;
 
     &:hover {
         border-radius: 4px;
         color: $gray2;
-        border-color: $gray1;
+        border-color: $color-rimac;
     }
 
     &:focus {
         border-radius: 4px;
         color: $gray1;
-        border-color: $gray1;
+        border-color: $color-rimac;
         box-shadow: none;
     }
 
     &-focused {
         border-radius: 4px;
         color: $gray1;
-        border-color: $gray1;
+        border-color: $color-rimac;
     }
 }
 
 .ant-select:not(.ant-select-customize-input) .ant-select-selector {
     border-radius: 4px;
     color: $gray3;
-    border-color: $gray4;
+    border-color: $color-rimac;
 }
 
 .ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector {
     border-radius: 4px;
     color: $gray1;
-    border-color: $gray1;
+    border-color: $color-rimac;
     box-shadow: none;
 }
 
 .ant-select:not(.ant-select-disabled):hover .ant-select-selector {
     border-radius: 4px;
     color: $gray2;
-    border-color: $gray1;
+    border-color: $color-rimac;
 }
 
 .ant-picker {
     border-radius: 4px;
     color: $gray3;
-    border-color: $gray4;
+    border-color: $color-rimac;
     width: 100%;
 
     &:hover {
         border-radius: 4px;
         color: $gray2;
-        border-color: $gray1;
+        border-color: $color-rimac;
     }
 
     &-focused {
         border-radius: 4px;
         color: $gray1;
-        border-color: $gray1;
+        border-color: $color-rimac;
         box-shadow: none;
     }
 }
@@ -81,4 +81,17 @@ input.ant-input {
 .ant-row.ant-form-item {
     margin-bottom: 5px;
     padding: 10px 15px 10px 15px;
+}
+
+input.ant-input.ant-input-disabled:hover {
+    border-color: $color-rimac;
+}
+
+.ant-checkbox-checked .ant-checkbox-inner {
+    background-color: $color-rimac;
+    border-color: $color-rimac;
+}
+
+.ant-checkbox-checked::after {
+    border: 1px solid $color-rimac;
 }

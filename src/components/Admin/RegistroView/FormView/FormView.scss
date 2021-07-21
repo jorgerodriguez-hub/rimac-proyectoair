@@ -15,3 +15,62 @@ p.ant-upload-drag-icon span.anticon.anticon-file-excel {
 .ant-upload-text-icon {
     display: none;
 }
+
+.ant-progress-inner {
+    background-color: #FFFFFF;
+}
+
+.ant-upload.ant-upload-drag {
+    border: 1px dashed $color-rimac;
+}
+
+.ant-upload.ant-upload-drag:not(.ant-upload-disabled):hover {
+    border-color: $color-rimac;
+}
+
+
+input.ant-input.ant-input-disabled:hover {
+    border-color: $color-rimac;
+}
+
+.ant-checkbox-checked .ant-checkbox-inner {
+    background-color: $color-rimac;
+    border-color: $color-rimac;
+}
+
+.ant-checkbox-checked::after {
+    border: 1px solid $color-rimac;
+}
+
+.ant-pagination-item-active a {
+    color: $color-rimac;
+}
+
+.ant-pagination-item-active {
+    border-color: $color-rimac;
+}
+
+.ant-pagination-item-active:focus-visible a, .ant-pagination-item-active:hover a {
+    color: $color-rimac;
+}
+
+.ant-pagination-item-active:focus-visible, .ant-pagination-item-active:hover {
+    border-color: $color-rimac;
+}
+
+.ant-btn:hover, .ant-btn:focus {
+    color: $color-rimac;
+    border-color: $color-rimac;
+}
+
+.ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+    color: $color-rimac;
+}
+
+.ant-tabs-tab:hover {
+    color: $color-rimac;
+}
+
+.ant-tabs-ink-bar {
+    background: $color-rimac;
+}
