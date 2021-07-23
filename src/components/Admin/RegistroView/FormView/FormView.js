@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { List, Typography, Divider, Button, Checkbox, Form, Input, Select, Row, Col, Progress, DatePicker, Upload, Result, Tooltip, message, notification, Tabs, Table, Modal } from 'antd';
-import { FileExcelOutlined, FormOutlined, EyeOutlined, RetweetOutlined, CheckCircleOutlined, MinusOutlined, PlusOutlined, PushpinOutlined, SearchOutlined, UserAddOutlined, NotificationTwoTone } from '@ant-design/icons';
+import { FileExcelOutlined, FormOutlined, EyeOutlined, RetweetOutlined, ExclamationCircleOutlined, CheckCircleOutlined, MinusOutlined, PlusOutlined, PushpinOutlined, SearchOutlined, UserAddOutlined, NotificationTwoTone } from '@ant-design/icons';
 import { sendExcel } from '../../../../api/excel';
 import { registroApi } from '../../../../api/excel';
 import moment from 'moment';
@@ -10,6 +10,8 @@ import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import './FormView.scss';
 
 export default function FormView() {
+
+    const { confirm } = Modal;
 
     const { Option } = Select;
 
@@ -21,9 +23,13 @@ export default function FormView() {
 
     const [isResultErrorVisible, setIsResultErrorVisible] = useState(false);
 
+    const [isWarningVisible, setIsWarningVisible] = useState(false);
+
     const [isModalVisible2, setIsModalVisible2] = useState(false);
 
     const [isModalVisible3, setIsModalVisible3] = useState(false);
+
+    const [isConfirmVisible, setIsConfirmVisible] = useState(false);
 
     const showModal3 = () => {
         setIsModalVisible3(true);
@@ -49,7 +55,7 @@ export default function FormView() {
         setIsModalVisible2(false);
     };
 
-    const [state, setState] = useState({ cliente : '', ruc : '', total : '', inicio : '', final : '', moneda : '', ubicaciones: [] });
+    const [state, setState] = useState({ cliente: '', ruc: '', total: '', inicio: '', final: '', moneda: '', poliza: '', ubicaciones: [] });
 
     const [markers, setMarkers] = useState([]);
 
@@ -185,41 +191,48 @@ export default function FormView() {
                                 onProgress({ percent: Math.round((loaded / total) * 100).toFixed(2) }, file);
                             },
                         })
-                        .then(( response ) => {
+                        .then((response) => {
                             onSuccess(response, file);
-                            console.log('THIS IS REPONSE->', response);
-                            if (response.data.mensajes) {
-                                setIsResultVisible(false);
-                                setIsResultErrorVisible(false);
-                                setIsResultErrorVisible(true);
-                                setState({});
-                                setMarkers([]);
-                                setErrores(response.data.mensajes);
-
-                            } else {
-                                setIsResultErrorVisible(false);
-                                setIsResultVisible(false);
-                                setIsResultVisible(true);
-
-                            }
-                            setState({ 
+                            setIsResultErrorVisible(false);
+                            setIsWarningVisible(false);
+                            setIsResultVisible(false);
+                            setIsResultVisible(true);
+                            setState({
                                 cliente : response.data.cliente.asegurado,
                                 ruc: response.data.cliente.ruc, 
                                 total : parseFloat(response.data.total_declarado).toFixed(2), 
                                 inicio : response.data.cliente.fecha_inicio, 
                                 final : response.data.cliente.fecha_final, 
                                 moneda : response.data.cliente.moneda, 
-                                ubicaciones : response.data.direcciones 
+                                ubicaciones : response.data.direcciones,
+                                poliza: response.data.cliente.poliza_multiriesgo ? 'RENOVACIÓN' : 'VENTAS'
                             });
                             setMarkers(response.data.direcciones);
+                            setErrores([]);
                         })
-                        .catch(onError);
+                        .catch((error) => {
+                            if( error.response.status === 400 ) {
+                                setIsResultVisible(false);
+                                setIsWarningVisible(false);
+                                setIsResultErrorVisible(false);
+                                setIsResultErrorVisible(true);
+                                setState({});
+                                setMarkers([]);
+                                setErrores(error.response.data.mensajes);
+                            } else if ( error.response.status === 502 ) {
+                                setIsResultVisible(false);
+                                setIsResultErrorVisible(false);
+                                setIsWarningVisible(false);
+                                setIsWarningVisible(true);
+                                setState({});
+                                setMarkers([]);
+                                setErrores([]);
+                            }
+                        })
                   };
                 });
             };
-
             getBase64();
-    
         },
     };    
 
@@ -324,13 +337,23 @@ export default function FormView() {
         height: '100%'
     };
 
-    const data2 = [
-        'Racing car sprays burning fuel into crowd.',
-        'Japanese princess to wed commoner.',
-        'Australian walks 100km after outback crash.',
-        'Man charged over missing wedding girl.',
-        'Los Angeles battles huge wildfires.',
-    ];
+    function showConfirm() {
+          setTimeout(() => {
+            confirm({
+              icon: <ExclamationCircleOutlined />,
+              content: <span>Se está procesando la solicitud, tambień ¿Desea aprobar la solicitud de modelamiento?</span>,
+              okText: 'SI',
+              cancelText: 'NO',
+              okType: 'danger',
+              onOk() {
+                  registerForm();
+              },
+              onCancel() {
+                  console.log('DUA LIPA ES MUY HERMOSA');
+              },
+            });
+          })
+    }
       
     return (
         <Form layout="vertical">
@@ -360,13 +383,14 @@ export default function FormView() {
                     { isResultVisible ? <Result
                             className="animate__animated animate__bounceInRight"
                             status="success"
-                            title="Archivo procesado satisfactoriamente!"
+                            title="¡Archivo procesado satisfactoriamente!"
                         /> : null }
 
                     { isResultErrorVisible ? <Result
                             className="animate__animated animate__bounceInRight"
                             status="error"
                             title="El archivo fue procesado con errores."
+                            subTitle="Haga clic en el botón para ver los errores de validación."
                             extra={[
                                 <Tooltip placement="bottom" title="Ver Errores"><Button 
                                 type="primary" 
@@ -378,6 +402,12 @@ export default function FormView() {
                             ]}
                         /> : null }
 
+                    { isWarningVisible ? <Result
+                            className="animate__animated animate__bounceInRight"
+                            status="warning"
+                            title="El archivo no pudo ser procesado."
+                            subTitle="El archivo tiene un estructura diferente. Vuelva a subirlo con el formato correcto."
+                        /> : null }
                     </Form.Item>
                 </Col>
             </Row>
@@ -435,10 +465,7 @@ export default function FormView() {
                 </Col>
                 <Col span={6}>
                     <Form.Item label="Tipo de Modelamiento">
-                        <Select defaultValue="REN">
-                            <Option key="01" value="REN">RENOVACIÓN</Option>
-                            <Option key="02" value="VEN">VENTAS</Option>
-                        </Select>
+                        <Input value={state.poliza} disabled />
                     </Form.Item>
                 </Col>
             </Row>
@@ -463,7 +490,8 @@ export default function FormView() {
                                     size="default"
                                     danger
                                     htmlType="submit"
-                                    onClick={registerForm}
+                                    onClick={showConfirm}
+                                    //onClick={registerForm}
                             >
                                 <CheckCircleOutlined />
                             </Button>
@@ -833,13 +861,11 @@ export default function FormView() {
                 </Button>,
             ]}
         >
-            <>
-                <List bordered>
-                {errores.map( ( {mensaje, index} ) => {
+            { errores ? <List bordered>
+                {errores.map(( {mensaje, index}) => {
                     return <List.Item key={index}><Typography.Text type="danger">[ERROR]</Typography.Text> {mensaje}</List.Item>
                 })}
-                </List>
-            </>
+            </List> : null }
         </Modal>
     </Form>
     );

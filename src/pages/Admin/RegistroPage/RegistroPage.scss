@@ -82,16 +82,3 @@ input.ant-input {
     margin-bottom: 5px;
     padding: 10px 15px 10px 15px;
 }
-
-input.ant-input.ant-input-disabled:hover {
-    border-color: $color-rimac;
-}
-
-.ant-checkbox-checked .ant-checkbox-inner {
-    background-color: $color-rimac;
-    border-color: $color-rimac;
-}
-
-.ant-checkbox-checked::after {
-    border: 1px solid $color-rimac;
-}
