@@ -4,6 +4,7 @@ import { CheckSquareOutlined, SearchOutlined, OrderedListOutlined , FileExcelOut
 import SearchView from '../SearchView';
 import './FormView.scss';
 import { getSolicitudes } from '../../../../api/excel';
+import moment from 'moment';
 
 export default function FormView() {
 
@@ -12,7 +13,7 @@ export default function FormView() {
     const consultar = () => {
         getSolicitudes().then(response => {
             console.log(response);
-            setPoints(response.respuesta);
+            setPoints(response.solicitudes);
         })
     };
 
@@ -58,7 +59,7 @@ export default function FormView() {
             dataIndex: 'acciones',
             render: (text) => <Button><SearchOutlined /></Button>,
         },
-      ];
+    ];
 
     const data = points.map((point, index) => (
         {
@@ -84,6 +85,8 @@ export default function FormView() {
             name: record.name,
         })
     };
+
+    const dateFormat = 'DD/MM/YYYY';
 
     return (
         <Form layout="vertical">
@@ -117,22 +120,34 @@ export default function FormView() {
             <Row>
                 <Col span={6}>
                     <Form.Item label="Vigencia - Desde">
-                        <DatePicker />
+                        <DatePicker 
+                            format={dateFormat}
+                            value={moment()}
+                        />
                     </Form.Item>
                 </Col>
                 <Col span={6}>
                     <Form.Item label="Vigencia - Hasta">
-                        <DatePicker />
+                        <DatePicker 
+                            format={dateFormat}
+                            value={moment()}
+                        />
                     </Form.Item>
                 </Col>
                 <Col span={6}>
                     <Form.Item label="Fecha de Creación - Desde">
-                        <DatePicker />
+                        <DatePicker 
+                            format={dateFormat}
+                            value={moment()}
+                        />
                     </Form.Item>
                 </Col>
                 <Col span={6}>
                     <Form.Item label="Fecha de Creación - Hasta">
-                        <DatePicker />
+                        <DatePicker 
+                            format={dateFormat}
+                            value={moment()}
+                        />
                     </Form.Item>
                 </Col>
             </Row>
@@ -159,34 +174,29 @@ export default function FormView() {
                             <Col span={6}>
                                 <h1><OrderedListOutlined /> Solicitudes de Modelamiento</h1>
                             </Col>
-                            <Col span={3}>
-                                <Badge status="success" text="Procesado" />
-                            </Col>
-                            <Col span={3}>
+                            <Col span={8}>
                                 <Badge status="default" text="Pendiente" />
+                                <Badge status="warning" text="Aprobado" style={{ marginLeft: 10 }} />
+                                <Badge status="success" text="Procesado" style={{ marginLeft: 10 }} />
+                                <Badge status="error" text="Error" style={{ marginLeft: 10 }} />
                             </Col>
-                            <Col span={3}>
-                                <Badge status="warning" text="Aprobado" />
-                            </Col>
-                            <Col span={2} offset={5}>
-                                <Tooltip placement="top" title="Aprobar">
-                                    <Button type="primary" 
-                                            size="default"
-                                            style={{ float: 'right' }} 
-                                            danger
-                                    >
-                                        <CheckCircleOutlined />
-                                    </Button>
-                                </Tooltip>
-                            </Col>
-                            <Col span={2}>
+                            <Col span={3} offset={7}>
                                 <Tooltip placement="top" title="Exportar Excel">
                                     <Button type="primary"
+                                            size="default"
+                                            style={{ float: 'right', marginLeft: 10 }}
+                                            danger
+                                    >
+                                        <FileExcelOutlined />
+                                    </Button>
+                                </Tooltip>
+                                <Tooltip placement="top" title="Aprobar">
+                                    <Button type="primary" 
                                             size="default"
                                             style={{ float: 'right' }}
                                             danger
                                     >
-                                        <FileExcelOutlined />
+                                        <CheckCircleOutlined />
                                     </Button>
                                 </Tooltip>
                             </Col>

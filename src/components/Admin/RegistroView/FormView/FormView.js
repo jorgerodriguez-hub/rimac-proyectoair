@@ -78,7 +78,7 @@ export default function FormView() {
         },
         {
             title: 'MONEDA',
-            dataIndex: 'moneda',
+            dataIndex: state.moneda ? 'monedausd' : 'monedapen',
         },
         {
             title: 'VAL. EDIFICIO',
@@ -129,7 +129,8 @@ export default function FormView() {
             numero: index+1,
             pais: 'PE',
             ubigeo: marker.direccion.departamento+'/'+marker.direccion.provincia+'/'+marker.direccion.distrito,
-            moneda: 'USD',
+            monedausd: 'USD',
+            monedapen: 'PEN',
             valedificio: parseFloat(marker.valor_declarado.bienes[0].valor).toFixed(2),
             valcontenido: parseFloat(marker.valor_declarado.bienes[12].valor).toFixed(2),
             valucro: marker.valor_declarado.bienes[13].valor
@@ -151,6 +152,9 @@ export default function FormView() {
         headers: {
             'Content-Type': 'text/plain'
         },
+        onChange(e) {
+            console.log('JAZMIN TE AMO', e);
+        },
         onSuccess(res, file) {
             console.log('onSuccess', res, file.name);
         },
@@ -159,6 +163,13 @@ export default function FormView() {
         },
         onProgress({ percent }, file) {
             console.log('onProgress', `${percent}%`, file.name, file);
+        },
+        onRemove() {
+            setState({});
+            setMarkers([]);
+            setIsResultErrorVisible(false);
+            setIsWarningVisible(false);
+            setIsResultVisible(false);
         },
         customRequest({
             action,
@@ -183,10 +194,12 @@ export default function FormView() {
                         .post(action, arrayAuxiliar[1], {
                             headers,
                             onUploadProgress: ({ total, loaded }) => {
+                                let myElement = document.querySelector(".ant-upload.ant-upload-drag");
+                                myElement.style.pointerEvents = "none";
                                 const percent = Math.floor((loaded / total) * 100);
                                 setProgress(percent);
                                 if (percent === 100) {
-                                    setTimeout(() => setProgress(0), 5000);
+                                    setTimeout(() => setProgress(0), 3000);
                                 }
                                 onProgress({ percent: Math.round((loaded / total) * 100).toFixed(2) }, file);
                             },
@@ -209,6 +222,8 @@ export default function FormView() {
                             });
                             setMarkers(response.data.direcciones);
                             setErrores([]);
+                            let myElement = document.querySelector(".ant-upload.ant-upload-drag");
+                            myElement.style.pointerEvents = "visible";
                         })
                         .catch((error) => {
                             if( error.response.status === 400 ) {
@@ -219,6 +234,8 @@ export default function FormView() {
                                 setState({});
                                 setMarkers([]);
                                 setErrores(error.response.data.mensajes);
+                                let myElement = document.querySelector(".ant-upload.ant-upload-drag");
+                                myElement.style.pointerEvents = "visible";
                             } else if ( error.response.status === 502 ) {
                                 setIsResultVisible(false);
                                 setIsResultErrorVisible(false);
@@ -227,6 +244,8 @@ export default function FormView() {
                                 setState({});
                                 setMarkers([]);
                                 setErrores([]);
+                                let myElement = document.querySelector(".ant-upload.ant-upload-drag");
+                                myElement.style.pointerEvents = "visible";
                             }
                         })
                   };
@@ -341,7 +360,7 @@ export default function FormView() {
           setTimeout(() => {
             confirm({
               icon: <ExclamationCircleOutlined />,
-              content: <span>Se está procesando la solicitud, tambień ¿Desea aprobar la solicitud de modelamiento?</span>,
+              content: <span>Se está procesando la solicitud, ¿Desea aprobar la solicitud de modelamiento?</span>,
               okText: 'SI',
               cancelText: 'NO',
               okType: 'danger',
