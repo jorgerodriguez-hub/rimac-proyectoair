@@ -346,11 +346,6 @@ export default function FormView() {
 
     const dateFormat = 'DD/MM/YYYY';
 
-    console.log('THIS IS STATE->', state);
-    console.log('THIS IS MARKERS->', markers);
-    console.log('THIS IS MODALMARKER', modalMarker);
-    console.log('THIS IS ERRORES', errores);
-
     const mapStyles = {
         width: '100%',
         height: '100%'

@@ -34,3 +34,11 @@ span.anticon.anticon-file-excel {
     color: $color-rimac;
     border-color: $color-rimac;
 }
+
+.ant-pagination-item:focus-visible a, .ant-pagination-item:hover a {
+    color: $color-rimac;
+}
+
+li.ant-pagination-item.ant-pagination-item:hover {
+    border-color: $color-rimac;
+}

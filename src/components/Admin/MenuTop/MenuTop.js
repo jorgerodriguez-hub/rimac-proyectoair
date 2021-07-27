@@ -2,6 +2,7 @@ import React from 'react';
 import { Button } from 'antd';
 import logoRimac from '../../../assets/img/svg/logo-white-rimac.svg';
 import { MenuFoldOutlined, MenuUnfoldOutlined, PoweroffOutlined } from '@ant-design/icons';
+import { AmplifySignOut } from '@aws-amplify/ui-react';
 
 import './MenuTop.scss';
 
@@ -23,7 +24,8 @@ export default function MenuTop(props) {
             </div>
             <div className="menu-top__right">
                 <Button type="link">
-                    <PoweroffOutlined />
+                    <AmplifySignOut />
+                    {/* <PoweroffOutlined /> */}
                 </Button>
             </div>
         </div>

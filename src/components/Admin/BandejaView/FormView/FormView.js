@@ -27,12 +27,28 @@ export default function FormView() {
                                 </Badge>,
         },
         {
-            title: 'CLIENTE',
+            title: 'TIPO DE SOLICITUD',
+            dataIndex: 'key',
+        },
+        {
+            title: 'TIPO DE MODELAMIENT0',
+            dataIndex: 'tipo_modelamiento',
+        },
+        {
+            title: 'ASEGURADO',
             dataIndex: 'cliente',
         },
         {
-            title: 'Nº SOLICITUD',
+            title: 'Nº DE SOLICITUD',
             dataIndex: 'nro_solicitud',
+        },
+        {
+            title: 'Nº DE OPORTUNIDAD',
+            dataIndex: 'key',
+        },
+        {
+            title: 'Nº DE POLIZA',
+            dataIndex: 'key',
         },
         {
             title: 'FECHA REGISTRO',
@@ -51,7 +67,7 @@ export default function FormView() {
             dataIndex: 'fecha_inicio',
         },
         {
-            title: 'FECHA EXP.',
+            title: 'FECHA EXPIRACIÓN',
             dataIndex: 'fecha_expiracion',
         },
         {
@@ -67,6 +83,7 @@ export default function FormView() {
             estado: 'PE',
             cliente: point.asegurado,
             nro_solicitud: point.id,
+            tipo_modelamiento: 'RENOVACIÓN',
             fecha_registro: point.fecha_creacion,
             tipo_suma: point.tipo_suma_asegurada,
             suma_asegurada: point.suma_asegurada,
