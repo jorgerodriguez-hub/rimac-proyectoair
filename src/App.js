@@ -2,15 +2,9 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import routes from './config/routes';
 
-import Amplify from 'aws-amplify';
-import { AmplifyAuthenticator } from '@aws-amplify/ui-react';
-import awsExports from './aws-exports';
-
-Amplify.configure(awsExports);
 
 function App() {
   return (
-    <AmplifyAuthenticator>
       <Router>
         <Switch>
           {routes.map((route, index) => (
@@ -18,7 +12,6 @@ function App() {
           ))}
         </Switch>
       </Router>
-    </AmplifyAuthenticator>
   );
 }
 

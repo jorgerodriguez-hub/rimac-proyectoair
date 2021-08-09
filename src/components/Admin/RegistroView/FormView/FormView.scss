@@ -82,3 +82,7 @@ input.ant-input.ant-input-disabled:hover {
 li.ant-pagination-item.ant-pagination-item:hover {
     border-color: $color-rimac;
 }
+
+input.ant-input.suma-asegurada {
+    pointer-events: none;
+}

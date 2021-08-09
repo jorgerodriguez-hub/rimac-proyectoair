@@ -1,0 +1,491 @@
+@import '../../assets/styles/helpers/_variables.scss';
+@import '../../assets/styles/helpers/_utils.scss';
+@import '../../assets/styles/helpers/_responsive.scss';
+// Estilos traidos de journeyvida 
+
+
+header {
+  // comentado para no romper los estilo de genesis
+  // height: 56px;
+  // @include desktop { height: 64px; }
+
+  &.profile {
+    height: 112px;
+    @include tablet { height: 56px; }
+    @include desktop { height: 64px; }
+  }
+
+  .header {
+    position: fixed;
+    width: 100%;
+    height: 56px;
+    background: $red;
+    z-index: 100;
+    border-bottom: 1px solid $pink2;
+    box-sizing: border-box;
+    @include desktop {
+      height: 64px;
+    }
+
+    .logo {
+      width: 100px;
+      height: 18px;
+      margin: 19px 0 0 width-column(2, 26);
+      color: #fff;
+      float: left;
+      font-size: 15px;
+      font-style: italic;
+      text-transform: uppercase;
+      text-indent: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      background: url('./images/logo.svg');
+      background-size: 100% auto;
+      @include tablet {
+        margin-left: width-column(2, 31);
+      }
+      @include desktop {
+        margin-top: 22px;
+      }
+
+      &.is-label {
+        margin-top: 12px;
+        @include desktop { margin-top: 15px; }
+      }
+    }
+
+    .label {
+      text-transform: uppercase;
+      color: $pink3;
+      font-family: $font-lato;
+      font-size: 10px;
+      font-weight: $font-bold;
+      letter-spacing: 3px;
+      display: inline-block;
+      left: width-column(2, 26);
+      top: 35px;
+      position: absolute;
+      @include tablet { left: width-column(2, 31); }
+      @include desktop { top: 38px; }
+    }
+
+    .hamburger {
+      width: 40px;
+      height: 40px;
+      float: right;
+      margin: 8px width-column(2, 26) 0 0;
+      position: relative;
+      transform: translateX(9px);
+      cursor: pointer;
+      @include tablet { margin-right: width-column(2, 31); }
+      @include desktop { margin-top: 12px; }
+
+      span {
+        display: block;
+        width: 22px;
+        height: 2px;
+        margin: 0 auto 7px;
+        border-radius: 4px;
+        position: absolute;
+        left: 9px;
+        top: 10px;
+        background: #fff;
+        transition: all 0.1s;
+
+        &:nth-child(2) { top: 19px; }
+        &:nth-child(3) { top: 28px; }
+      }
+
+      &.opened span {
+        transform: rotate(-45deg);
+        top: 19px;
+
+        &:nth-child(2) { opacity: 0; }
+
+        &:nth-child(3) {
+          transform: rotate(45deg);
+          top: 19px;
+        }
+      }
+    }
+
+    &__exit {
+      width: 40px;
+      height: 40px;
+      float: right;
+      margin: 7px width-column(2, 26) 0 0;
+      text-align: center;
+      padding-top: 12px;
+      box-sizing: border-box;
+      color: #fff;
+      text-decoration: none;
+      cursor: pointer;
+      transform: translateX(11px);
+      @include tablet {
+        margin-right: width-column(2, 31);
+      }
+      @include desktop { margin-top: 12px; }
+    }
+
+    &.is-white {
+      background: #fff;
+      border-bottom-color: $gray4;
+
+      .logo { background: url('./images/logo-red.svg'); }
+
+      .hamburger span { background: $gray2; }
+
+      .header__exit { color: $gray2; }
+    }
+  }
+}
+// comentaro para no romper los estilos de la aplicacion
+// .menu {
+//   display: flex;
+//   flex-direction: column;
+//   justify-content: space-between;
+//   position: fixed;
+//   width: 100%;
+//   height: 0;
+//   padding-top: 56px;
+//   background: $red;
+//   z-index: 99;
+//   overflow: hidden;
+//   box-sizing: border-box;
+//   transition: all .5s cubic-bezier(1, 0, 0, 1);
+
+//   &.opened {
+//     height: 100%;
+//     overflow-y: auto;
+
+//     .menu__nav a {
+//       transform: translateX(0);
+//       opacity: 1;
+//       transition: color 0.3s, transform 0.3s 0.45s, opacity 0.3s 0.45s;
+//     }
+
+//     .menu__content__actions {
+//       opacity: 1;
+//       transition: opacity 0.3s 0.75s;
+//     }
+//   }
+
+//   &.smallheight {
+//     position: absolute;
+//     height: auto;
+//   }
+
+//   .username {
+//     width: 100%;
+//     box-sizing: border-box;
+//     border-bottom: 1px solid #F55D68;
+//     padding: 0 width-column(2, 26);
+//     margin: 0;
+//     float: none;
+
+//     @include tablet {
+//       display: none;
+//     }
+
+//     .username__name {
+//       height: auto;
+//       padding: 0;
+//       border: 0;
+//       max-width: 100%;
+//     }
+//   }
+
+//   &__content__nav {
+//     height: 100%;
+//     min-height: 200px;
+//     display: flex;
+//     align-items: center;
+//   }
+
+//   &__nav {
+//     width: 100%;
+
+//     a {
+//       display: block;
+//       font-family: $font-lato;
+//       font-weight: $font-light;
+//       font-size: 36px;
+//       line-height: 42px;
+//       letter-spacing: -0.8px;
+//       text-decoration: none;
+//       color: $pink3;
+//       position: relative;
+//       padding-left: width-column(2, 26);
+//       padding-right: width-column(2, 26);
+//       margin: 0 0 30px 0;
+//       transition: color 0.3s, transform 0.3s 0.5s, opacity 0.3s;
+//       transform: translateX(-20px);
+//       opacity: 0;
+//       @include tablet {
+//         font-size: 56px;
+//         line-height: 62px;
+//         letter-spacing: -0.6px;
+//         padding-left: width-column(2, 31);
+//         margin: 0 0 40px 0;
+//       }
+
+//       .menu__link {
+//         display: inline-block;
+//         position: relative;
+//         padding-left: 0;
+//         transition: padding-left 0.375s;
+  
+//         &::before {
+//           display: block;
+//           position: absolute;
+//           @include icon-font;
+//           content: '\e90a';
+//           font-size: 16px;
+//           left: -24px;
+//           top: 12px;
+//           opacity: 0;
+//           transition: left 0.3s, opacity 0.5s;
+//           @include tablet { top: 25px; }
+//         }
+//       }
+
+//       &:hover,
+//       &.is-active {
+//         color: #fff;
+
+//         .menu__link {
+//           padding-left: 30px;
+//           @include tablet { padding-left: 40px; }
+
+//           &::before { 
+//             opacity: 1; 
+//             left: 0;
+//           }
+//         }
+//       }
+
+//       &.is-active { font-weight: 400; }
+
+//       &:last-child { margin-bottom: 0; }
+//     }
+//   }
+
+//   &__content__actions {
+//     opacity: 0;
+//     transition: opacity 0.3s;
+//     @include clearfix;
+
+//     a {
+//       display: block;
+//       font-family: $font-lato;
+//       color: $pink3;
+//       text-decoration: none;
+//       margin-left: width-column(2, 26);
+//       transition: color 0.3s;
+
+//       i {
+//         font-size: 16px;
+//         margin-right: 5px;
+//       }
+
+//       &:hover { color: #fff; }
+//     }
+//   }
+
+//   &__actions {
+//     @include tablet {
+//       margin-bottom: 70px;
+//     }
+
+//     a {
+//       font-weight: 300;
+//       font-size: 20px;
+//       line-height: 24px;
+//       margin-bottom: 15px;
+
+//       @include tablet {
+//         font-size: 24px;
+//         line-height: 30px;
+//         margin-left: width-column(2, 31);
+//         margin-right: width-column(10, 31);
+//       }
+
+//       &.btn.is-white {
+//         max-width: 230px;
+//         font-weight: 600;
+//         font-size: 14px;
+//         display: flex;
+
+//         &:hover { color: $red; }
+//       }
+
+//       &:last-child {
+//         margin-bottom: 0;
+//       }
+//     }
+//   }
+
+//   &__logout {
+//     padding-bottom: 40px;
+//     padding-top: 50px;
+//     cursor: pointer;
+
+//     @include tablet {
+//       float: right;
+//       margin-top: -100px;
+//       padding: 0 width-column(2, 31) 0 0;
+//     }
+
+//     a {
+//       font-size: 12px;
+//       letter-spacing: 0.8px;
+//       text-transform: uppercase;
+
+//       @include tablet {
+//         font-size: 12px;
+//         margin-left: 0;
+//       }
+
+//       i { font-size: 12px; }
+//     }
+//   }
+// }
+
+.menu-access {
+  position: fixed;
+  width: 100%;
+  height: 56px;
+  top: 56px;
+  background: $red;
+  padding: 0 width-column(1, 26);
+  box-sizing: border-box;
+  z-index: 99;
+  display: flex;
+  justify-content: space-between;
+
+  @include tablet {
+    z-index: 100;
+    background: transparent;
+    top: 0;
+    width: width-column(20, 31);
+    right: width-column(4, 31);
+    padding: 0;
+    display: block;
+    text-align: right;
+  }
+
+  @include desktop {
+    height: 64px;
+  }
+
+  &__link {
+    height: 100%;
+    font-family: $font-lato;
+    font-weight: $font-bold;
+    font-size: 12px;
+    line-height: 16px;
+    letter-spacing: 0.8px;
+    color: $pink3;
+    text-transform: uppercase;
+    box-sizing: border-box;
+    text-decoration: none;
+    text-align: center;
+    padding: 20px width-column(1, 24) 0;
+    min-width: width-column(10, 24);
+    position: relative;
+    transition: color 0.3s;
+    display: none;
+
+    @include tablet {
+      display: inline-block;
+      min-width: auto;
+      padding-left: 10px;
+      padding-right: 10px;
+      margin-left: 20px;
+    }
+
+    @include desktop {
+      padding-top: 25px;
+    }
+
+    &:nth-child(1),
+    &:nth-child(2) {
+      display: inline-block;
+    }
+
+    &::before {
+      width: 100%;
+      height: 2px;
+      content: '';
+      border-bottom-left-radius: 4px;
+      border-bottom-right-radius: 4px;
+      background: $red;
+      position: absolute;
+      top: 0;
+      left: 0;
+      transition: background 0.3s;
+    }
+
+    &:hover,
+    &.is-active {
+      color: #fff;
+
+      &::before {
+        background: #fff;
+      }
+    }
+  }
+}
+
+.username {
+  float: right;
+  color: #fff;
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 56px;
+  margin-right: 6px;
+
+  @include desktop {
+    height: 64px;
+  }
+
+  &__photo {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    overflow: hidden;
+    border-radius: 50%;
+
+    img {
+      width: 100%;
+    }
+  }
+
+  &__name {
+    height: 23px;
+    font-family: $font-lato;
+    font-size: 16px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0 0 0 10px;
+    padding-right: 24px;
+    padding-top: 3px;
+    border-right: 1px solid $pink2;
+    max-width: 180px;
+  }
+}
+
+.is-white .username .username__name {
+  color: $gray2;
+  border-right-color: $gray6;
+}
+
+.header .username {
+  display: none;
+
+  @include tablet {
+    display: flex;
+  }
+}

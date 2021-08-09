@@ -1,0 +1,208 @@
+@import '../../assets/styles/helpers/responsive';
+@import '../../assets/styles/helpers/variables';
+@import '../../assets/styles/helpers/utils';
+
+header.login {
+  height: auto;
+
+  .header { 
+    z-index: 1; 
+    border-bottom: 0;
+  }
+}
+
+.index {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: absolute;
+  min-height: 360px;
+  @include tablet {
+    min-height: 680px;
+  }
+
+  .box {
+    width: 100%;
+    height: calc(100% - 30px);
+    background: $red;
+    transform-origin: 0 0 0;
+    transform: skew(0deg, -4.4deg);
+    border-bottom-left-radius: 40px;
+    overflow: hidden;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: -1;
+
+    @include tablet {
+      width: 102%;
+      transform: skew(4.4deg, -4.4deg);
+      margin-left: -10px;
+      border-bottom-left-radius: 60px;
+    }
+
+    @include desktop {
+      margin-left: -6px;
+      border-bottom-left-radius: 90px;
+    }
+
+    & > div {
+      height: 100%;
+      transform: skew(0deg, 4.4deg);
+      @include tablet {
+        transform: skew(-4.4deg, 4.4deg);
+      }
+    }
+
+    &__house {
+      width: 115%;
+      height: 142px;
+      background: url('./images/house.png') no-repeat right 0;
+      background-size: auto 100%;
+      position: absolute;
+      bottom: -22px;
+      @include tablet {
+        height: 270px;
+        width: 100%;
+        bottom: -30px;
+      }
+      @include desktop {
+        max-width: 1240px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+    }
+
+    &__cloud {
+      width: 72px;
+      height: 19px;
+      background: url('./images/cloud.svg') no-repeat 0 0;
+      background-size: 100% auto;
+      position: absolute;
+      animation-iteration-count: infinite;
+      animation-timing-function: linear;
+      z-index: 1;
+      @include tablet {
+        width: 134px;
+        height: 36px;
+      }
+
+      &.is-cloud1 {
+        top: 110px;
+        animation-name: cloudmove;
+        animation-duration: 50s;
+        @include tablet { top: 20%; }
+      }
+
+      &.is-cloud2 {
+        top: 40%;
+        animation-name: cloudmove-rl;
+        animation-duration: 50s;
+      }
+
+      &.is-cloud3 {
+        top: 60%;
+        animation-name: cloudmove-mr;
+        animation-duration: 80s;
+      }
+    }
+  }
+
+  .wrap {
+    position: relative;
+    height: 100%;
+    display: flex;
+  }
+
+  .content {
+    padding: 0 width-column(2, 26);
+    margin-top: 85px;
+    width: 100%;
+    box-sizing: border-box;
+    @include tablet {
+      padding: 0  0 0 width-column(4, 31);
+      margin-top: 170px;
+    }
+    @include desktop {
+      padding: 0  0 0 width-column(2, 31);
+    }
+  }
+
+  .title {
+    font-size: 36px;
+    line-height: 44px;
+    letter-spacing: -0.8px;
+    color: #fff;
+    font-family: $font-lato;
+    margin-bottom: 40px;
+    padding: 0;
+    @include tablet {
+      font-size: 46px;
+      line-height: 56px;
+      letter-spacing: -0.2px;
+      margin-bottom: 40px;
+    }
+    @include desktop {
+      font-size: 56px;
+      line-height: 64px;
+    }
+
+    strong { color: #fff; }
+  }
+
+  .btn {
+    max-width: 130px;
+    @include tablet { max-width: 155px; }
+  }
+
+  .people {
+    position: absolute;
+    right: width-column(3, 26);
+    bottom: 30px;
+
+    &.is-girl {
+      width: 88px;
+      z-index: 2;
+      @include tablet {
+        width: 155px;
+        right: width-column(3, 31);
+        margin-right: 220px;
+      }
+      @include desktop {
+        width: 210px;
+        right: width-column(5, 31);
+        margin-right: 270px;
+      }
+    }
+
+    &.is-boy {
+      display: none;
+      z-index: 3;
+      @include tablet {
+        display: block;
+        width: 230px;
+        right: width-column(3, 31);
+      }
+      @include desktop {
+        width: 310px;
+        right: width-column(5, 31);
+      }
+    }
+  }
+}
+
+@keyframes cloudmove {
+  from { left: -134px; }
+  to { left: 100%; }
+}
+
+@keyframes cloudmove-rl {
+  from { left: 100%; }
+  to { left: -134px; }
+}
+
+@keyframes cloudmove-mr {
+  0% { left: -134px; }
+  50% { left: 100%; }
+  100% {left: -134px; }
+}

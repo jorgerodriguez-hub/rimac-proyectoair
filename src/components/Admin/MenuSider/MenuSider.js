@@ -17,13 +17,13 @@ export default function MenuSider(props) {
             <h1>JUAN PÉREZ</h1>
             <Menu theme="light" mode="inline" defaultSelectedKeys={["1"]}>
                 <Menu.Item key="1">
-                    <Link to={"/registro"}>
+                    <Link to={"/admin/registro"}>
                         <FileAddOutlined />
                         <span className="nav-text">Registro de Solicitud</span>
                     </Link>
                 </Menu.Item>                
                 <Menu.Item key="2">
-                    <Link to={"/bandeja"}>
+                    <Link to={"/admin/bandeja"}>
                         <FileDoneOutlined />
                         <span className="nav-text">Consulta de Solicitudes</span>
                     </Link>

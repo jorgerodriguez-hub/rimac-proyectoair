@@ -5,27 +5,30 @@ import LayoutAdmin from '../layouts/LayoutAdmin';
 import AdminRegistro from '../pages/Admin/RegistroPage';
 import AdminBandeja from '../pages/Admin/BandejaPage';
 
+// Login
+import LoginAD from '../pages/LoginAD';
+
 // Other
 import Error404 from '../pages/Error404';
 
 const routes = [
     {
-        path: "/",
+        path: "/admin",
         component: LayoutAdmin,
         exact: false,
         routes: [
+            // {
+            //     path: "/",
+            //     component: LoginAD,
+            //     exact: true
+            // },
             {
-                path: "/",
+                path: "/admin/registro",
                 component: AdminRegistro,
                 exact: true
             },
             {
-                path: "/registro",
-                component: AdminRegistro,
-                exact: true
-            },
-            {
-                path: "/bandeja",
+                path: "/admin/bandeja",
                 component: AdminBandeja,
                 exact: true
             },
@@ -33,6 +36,11 @@ const routes = [
                 component: Error404
             }
         ]
+    },
+    {
+        path: "/",
+        component: LoginAD,
+        exact: false
     }
 ];
 

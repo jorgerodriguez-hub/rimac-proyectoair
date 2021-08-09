@@ -6,8 +6,10 @@ import { registroApi } from '../../../../api/excel';
 import moment from 'moment';
 import axios from 'axios';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import { IntlProvider, FormattedNumber, InvalidConfigError } from 'react-intl';
 
 import './FormView.scss';
+import Google from '../../Google';
 
 export default function FormView() {
 
@@ -55,7 +57,7 @@ export default function FormView() {
         setIsModalVisible2(false);
     };
 
-    const [state, setState] = useState({ cliente: '', ruc: '', total: '', inicio: '', final: '', moneda: '', poliza: '', ubicaciones: [] });
+    const [state, setState] = useState({ cliente: '', ruc: '', total: '', inicio: '', final: '', moneda: '', poliza: '', tipo_suma: '', tipo_modelamiento: '', ubicaciones: [] });
 
     const [markers, setMarkers] = useState([]);
 
@@ -83,10 +85,12 @@ export default function FormView() {
         {
             title: 'VAL. EDIFICIO',
             dataIndex: 'valedificio',
+            render: (dataIndex) => <IntlProvider locale="en"><FormattedNumber value={dataIndex} style="currency" currency="USD" /></IntlProvider>
         },
         {
             title: 'VAL. CONTENIDO',
             dataIndex: 'valcontenido',
+            render: (dataIndex) => <IntlProvider locale="en"><FormattedNumber value={dataIndex} style="currency" currency="USD" /></IntlProvider>
         },
         {
             title: 'VAL. LUCRO',
@@ -152,17 +156,14 @@ export default function FormView() {
         headers: {
             'Content-Type': 'text/plain'
         },
-        onChange(e) {
-            console.log('JAZMIN TE AMO', e);
-        },
         onSuccess(res, file) {
             console.log('onSuccess', res, file.name);
         },
         onError(err) {
-            console.log('onError', err);
+            //console.log('onError', err);
         },
         onProgress({ percent }, file) {
-            console.log('onProgress', `${percent}%`, file.name, file);
+            //console.log('onProgress', `${percent}%`, file.name, file);
         },
         onRemove() {
             setState({});
@@ -218,7 +219,7 @@ export default function FormView() {
                                 final : response.data.cliente.fecha_final, 
                                 moneda : response.data.cliente.moneda, 
                                 ubicaciones : response.data.direcciones,
-                                poliza: response.data.cliente.poliza_multiriesgo ? 'RENOVACIÓN' : 'VENTAS'
+                                poliza: response.data.cliente.poliza_multiriesgo ? '01' : '02'
                             });
                             setMarkers(response.data.direcciones);
                             setErrores([]);
@@ -317,13 +318,13 @@ export default function FormView() {
             cod_cliente: "202109",
             ruc: state.ruc,
             asegurado: state.cliente,
-            tipo_suma_asegurada: "B",
+            tipo_suma_asegurada: state.tipo_suma,
             moneda: "PEN",
             suma_asegurada: state.cliente,
             fecha_inicio: state.inicio,
             fecha_expiracion: state.final,
             segmento: "BRUNITO",
-            tipo_modelamiento: "01",
+            tipo_modelamiento: state.tipo_modelamiento,
             direcciones: markers
         };
 
@@ -340,8 +341,24 @@ export default function FormView() {
             });
     }
 
-    function handleChange(value) {
-        console.log(`selected ${value}`);
+    function sumaChange(value) {
+        if (value === 'N') {
+            let myElement = document.querySelector("input.ant-input.suma-asegurada");
+            myElement.style.pointerEvents = "none";
+        } else if (value === 'B') {
+            let myElement = document.querySelector("input.ant-input.suma-asegurada");
+            myElement.style.pointerEvents = "visible";
+        }
+        setState({ ...state, tipo_suma: value});
+    }
+
+    function modelamientoChange(value) {
+        setState({ ...state, tipo_modelamiento: value});
+    }
+
+    function aseguradaChange(value) {
+
+        setState({ ...state, suma_asegurada: value});
     }
 
     const dateFormat = 'DD/MM/YYYY';
@@ -363,12 +380,12 @@ export default function FormView() {
                   registerForm();
               },
               onCancel() {
-                  console.log('DUA LIPA ES MUY HERMOSA');
+
               },
             });
           })
     }
-      
+
     return (
         <Form layout="vertical">
             <Form.Item>
@@ -433,7 +450,7 @@ export default function FormView() {
                 </Col>
                 <Col span={6}>
                     <Form.Item label="Tipo Suma Asegurada">
-                        <Select defaultValue="N" onChange={handleChange}>
+                        <Select defaultValue="N" onChange={sumaChange}>
                             <Option key="01" value="N">N</Option>
                             <Option key="02" value="B">B</Option>
                         </Select>
@@ -446,7 +463,7 @@ export default function FormView() {
                 </Col>
                 <Col span={6}>
                     <Form.Item label="Suma Asegurada">
-                        <Input value={state.total} disabled />
+                        <Input className="suma-asegurada" value={Intl.NumberFormat('ja-JP').format(state.total)} onChange={aseguradaChange} />
                     </Form.Item>
                 </Col>
             </Row>
@@ -479,7 +496,10 @@ export default function FormView() {
                 </Col>
                 <Col span={6}>
                     <Form.Item label="Tipo de Modelamiento">
-                        <Input value={state.poliza} disabled />
+                        <Select value={state.poliza} onChange={modelamientoChange}>
+                            <Option key="01" value="01">RENOVACIÓN</Option>
+                            <Option key="02" value="02">VENTAS</Option>
+                        </Select>
                     </Form.Item>
                 </Col>
             </Row>
@@ -705,7 +725,7 @@ export default function FormView() {
                         </Col>
                         <Col span={12}>
                                 <LoadScript
-                                    googleMapsApiKey='AIzaSyBlmA6WWmOCDNwP1Cnqihm4VCB-dK35hac'>
+                                    googleMapsApiKey={process.env.REACT_APP_API_KEY}>
                                         <GoogleMap
                                             mapContainerStyle={mapStyles}
                                             zoom={13}
@@ -721,6 +741,7 @@ export default function FormView() {
                                             />
                                         </GoogleMap>
                                 </LoadScript>
+                                {/* <Google /> */}
                         </Col>
                     </Row>
                 </TabPane>

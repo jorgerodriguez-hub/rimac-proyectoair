@@ -11,10 +11,11 @@ export default function FormView() {
     const [points, setPoints] = useState([]);;
 
     const consultar = () => {
-        getSolicitudes().then(response => {
-            console.log(response);
-            setPoints(response.solicitudes);
-        })
+        // getSolicitudes().then(response => {
+        //     console.log(response);
+        //     setPoints(response.solicitudes);
+        // })
+        console.log('Messi');
     };
 
     const columns = [

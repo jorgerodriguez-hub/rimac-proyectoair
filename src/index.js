@@ -3,9 +3,9 @@ import ReactDOM from 'react-dom';
 import 'antd/dist/antd.css';
 import App from './App';
 // Authentication
-//import SetAuth from './config/auth';
+import SetAuth from './config/auth';
 
-//SetAuth();
+SetAuth();
 ReactDOM.render(
     <App/>,
   document.getElementById('root')

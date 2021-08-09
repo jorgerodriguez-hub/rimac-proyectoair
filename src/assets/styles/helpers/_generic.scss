@@ -1,0 +1,195 @@
+// @import 'variables';
+// @import 'utils';
+// @import 'responsive';
+
+.wrap {
+  max-width: 1240px;
+  margin: 0 auto;
+}
+// html {
+//   -webkit-font-smoothing: antialiased;
+//   -moz-font-smoothing: antialiased;
+//   text-rendering: optimizeLegibility;
+//   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+//   -moz-tap-highlight-color: rgba(0, 0, 0, 0);
+// }
+
+// *::before,
+// *::after {
+//   box-sizing: border-box;
+// }
+
+// button * {
+//   pointer-events: none;
+// }
+
+// input:-webkit-autofill,
+// input:-webkit-autofill:hover, 
+// input:-webkit-autofill:focus, 
+// input:-webkit-autofill:active  {
+//   box-shadow: 0 0 0 30px white inset !important;
+// }
+
+// body {
+//   margin: 0;
+//   padding: 0;
+//   font-family: $font-lato;
+//   font-weight: $font-regular;
+// }
+
+// .wrap {
+//   max-width: 1240px;
+//   margin: 0 auto;
+// }
+
+// .content {
+//   padding: 0 width-column(2, 26);
+//   @include clearfix;
+//   @include tablet { padding: 0 width-column(1, 31); }
+// }
+
+// .hideblock {
+//   overflow: hidden;
+//   height: 0;
+//   z-index: -1;
+// }
+
+// .layout-left {
+//   width: 100%;
+//   float: left;
+//   @include tablet {
+//     width: width-column(14, 29);
+//     margin-left: width-column(2, 29);
+//   }
+//   @include tablet-large {
+//     //width: width-column(12, 29);
+//     margin-left: width-column(3, 29);
+//   }
+//   @include desktop {
+//     width: width-column(12, 29);
+//     //margin-left: width-column(3, 29);
+//   }
+// }
+
+// .layout-right {
+//   float: right;
+//   display: none;
+//   @include tablet {
+//     width: width-column(12, 29);
+//     display: block;
+//     position: sticky;
+//     top: 56px;
+
+//     .person1 {
+//       position: absolute;
+//       width: 198px;
+//       height: 430px;
+//       right: width-column(2, 12);
+//       top: 60px;
+//       z-index: 2;
+//       background: url('./assets/images/boy.svg') no-repeat 0 0;
+//       background-size: 100% auto;
+//     }
+
+//     .person-hand {
+//       position: absolute;
+//       width: 198px;
+//       height: 500px;
+//       right: width-column(2, 12);
+//       top: 60px;
+//       z-index: 2;
+//       background: url('./assets/images/up-happy.svg') no-repeat 0 0;
+//       background-size: 100% auto;
+//     }
+
+//   }
+
+//   @include desktop {
+//     top: 64px;
+
+//     .person1 {
+//       width: 235px;
+//       height: 495px;
+//       top: 50px;
+//     }
+
+//     .person2 {
+//       position: absolute;
+//       width: 157px;
+//       height: 490px;
+//       right: width-column(7, 12);
+//       top: 60px;
+//       z-index: 1;
+//       background: url('./assets/images/girl.svg') no-repeat 0 0;
+//       background-size: 100% auto;
+//     }
+//   }
+
+//   .person {
+//     @include tablet {
+//       padding-top: 50px;
+
+//       &__img {
+//         display: block;
+//         height: 400px;
+//         width: 108px;
+//         margin: 0 auto;
+//         background-size: 100% auto;
+//       }
+
+//       &__name {
+//         display: block;
+//         font-family: $font-lato;
+//         font-weight: $font-light;
+//         font-size: 28px;
+//         line-height: 36px;
+//         text-align: center;
+//         letter-spacing: -0.2px;
+//         color: $gray1;
+//       }
+
+//       &__age {
+//         display: block;
+//         font-family: $font-lato;
+//         font-weight: $font-regular;
+//         font-size: 14px;
+//         line-height: 24px;
+//         text-align: center;
+//         color: $gray3;
+//       }
+//     }
+//   }
+// }
+
+// .form__description {
+//   font-family: $font-roboto;
+//   font-weight: 300;
+//   font-size: 16px;
+//   line-height: 24px;
+//   color: $gray1;
+//   margin: 0;
+//   padding-bottom: 28px;
+//   @include tablet {
+//     font-size: 18px;
+//     line-height: 28px;
+//     padding-bottom: 43px;
+//   }
+// }
+
+// .loader {
+//   display: block;
+//   width: 30px;
+//   height: 30px;
+//   margin: 0 auto;
+//   background: url('./assets/images/loading-red.svg') no-repeat 0 0;
+//   background-size: 100% auto;
+//   animation-name: rotater;
+//   animation-duration: 0.9s;
+//   animation-timing-function: linear;
+//   animation-iteration-count: infinite;
+// }
+
+// @keyframes rotater {
+//   from { transform: rotate(0deg); }
+//   to { transform: rotate(360deg); }
+// }
