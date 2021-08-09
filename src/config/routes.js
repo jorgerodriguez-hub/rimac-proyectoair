@@ -13,7 +13,7 @@ import Error404 from '../pages/Error404';
 
 const routes = [
     {
-        path: "/admin",
+        path: "/",
         component: LayoutAdmin,
         exact: false,
         routes: [
@@ -37,11 +37,11 @@ const routes = [
             }
         ]
     },
-    {
-        path: "/",
-        component: LoginAD,
-        exact: false
-    }
+    // {
+    //     path: "/",
+    //     component: LoginAD,
+    //     exact: false
+    // }
 ];
 
 export default routes;
